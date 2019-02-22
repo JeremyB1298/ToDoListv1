@@ -38,6 +38,12 @@ class ViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "addItemIdentifier", let vc = segue.destination as? AddItemTableViewController {
             vc.delegate = self
+        } else if segue.identifier == "editItemIdentifier", let vc = segue.destination as? AddItemTableViewController {
+            vc.delegate = self
+            guard let cell = sender as? UITableViewCell, let id = tableView.indexPath(for: cell)?.row else {
+                return
+            }
+            vc.itemToEdit = listItem[id]
         }
     }
     
@@ -145,9 +151,19 @@ extension ViewController: UISearchResultsUpdating {
 }
 
 extension ViewController: AddItemTableViewDelegate {
+    func editItemFinish(controller: UITableViewController, item: Item) {
+        controller.navigationController?.popViewController(animated: true)
+        
+        guard let index = listItem.firstIndex(where: { $0 === item }) else {
+            return
+        }
+        listItem[index] = item
+        tableView.reloadRows(at: [IndexPath(item: index, section: 0)], with: UITableView.RowAnimation.automatic)
+    }
+    
     func addItemFinish(controller: UITableViewController, item: Item) {
         controller.navigationController?.popViewController(animated: true)
-        self.listItem.append(item)
-        self.tableView.insertRows(at: [IndexPath(item: self.listItem.count-1, section: 0)], with: UITableView.RowAnimation.top)
+        listItem.append(item)
+        tableView.insertRows(at: [IndexPath(item: self.listItem.count-1, section: 0)], with: UITableView.RowAnimation.top)
     }
 }

@@ -9,7 +9,8 @@
 import UIKit
 
 protocol AddItemTableViewDelegate {
-    func addItemFinish(controller: UITableViewController,item: Item)
+    func addItemFinish(controller: UITableViewController, item: Item)
+    func editItemFinish(controller: UITableViewController, item: Item)
 }
 
 
@@ -19,24 +20,40 @@ class AddItemTableViewController: UITableViewController {
     @IBOutlet weak var btnDone: UIBarButtonItem!
     
     var delegate: AddItemTableViewDelegate?
+    var itemToEdit: Item?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        if itemToEdit == nil {
+            navigationController?.title = "Edit Item"
+            txtField.text = itemToEdit?.title
+        } else {
+            navigationController?.title = "Add Item"
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         txtField.becomeFirstResponder()
-        //btnDone.isEnabled = false
+        btnDone.isEnabled = false
     }
 
     @IBAction func actnDone(_ sender: Any) {
-        guard let txt = txtField.text else {
-            return
+        
+        if itemToEdit == nil {
+            guard let txt = txtField.text else {
+                return
+            }
+            itemToEdit?.title = txt
+            delegate?.editItemFinish(controller: self, item: itemToEdit!)
+        } else {
+            guard let txt = txtField.text else {
+                return
+            }
+            delegate?.addItemFinish(controller: self, item: Item( txt))
         }
-        delegate?.addItemFinish(controller: self, item: Item( txt))
     }
     
 }
