@@ -28,7 +28,7 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="CellIdentifier" rowHeight="81" id="mqy-P9-cvr">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="CellIdentifier" rowHeight="81" id="mqy-P9-cvr" customClass="ItemTableViewCell" customModule="ToDoListv1" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="81"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mqy-P9-cvr" id="gK3-4c-eqG">
@@ -87,8 +87,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="imageView" destination="WE3-vF-B89" id="vR1-Ko-1ox"/>
                                             <outlet property="lblCheckmark" destination="iHv-Pu-7PT" id="VIa-N4-T0L"/>
-                                            <outlet property="lblTitle" destination="SlF-rB-EJi" id="sa0-Pj-eXr"/>
+                                            <outlet property="lblDate" destination="SlF-rB-EJi" id="GOU-0h-ci6"/>
+                                            <outlet property="lblTitle" destination="p22-Rd-7D5" id="U88-yJ-Km7"/>
                                             <segue destination="nt5-qk-M37" kind="show" identifier="editItemIdentifier" trigger="accessoryAction" id="aW3-TD-JZT"/>
                                         </connections>
                                     </tableViewCell>
@@ -172,7 +174,7 @@
                                                         <!--2019-02-22 15:41:20 +0000-->
                                                     </date>
                                                 </datePicker>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JMF-wf-si4">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JMF-wf-si4">
                                                     <rect key="frame" x="67" y="212" width="241" height="291"/>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8qF-sT-ZT5">
@@ -189,9 +191,9 @@
                                                 <constraint firstItem="i8q-G1-6On" firstAttribute="top" secondItem="kL4-B3-4a9" secondAttribute="bottom" constant="15" id="IA9-FI-Q7g"/>
                                                 <constraint firstItem="kL4-B3-4a9" firstAttribute="top" secondItem="VbO-be-Htx" secondAttribute="topMargin" constant="8" id="IRa-ln-Ku0"/>
                                                 <constraint firstItem="V5d-nT-CzP" firstAttribute="leading" secondItem="i8q-G1-6On" secondAttribute="leading" id="Jhx-Lm-aKQ"/>
-                                                <constraint firstItem="8qF-sT-ZT5" firstAttribute="top" secondItem="JMF-wf-si4" secondAttribute="bottom" constant="28" id="Lgf-Ub-LQL"/>
                                                 <constraint firstItem="i8q-G1-6On" firstAttribute="leading" secondItem="VbO-be-Htx" secondAttribute="leading" id="NaC-iA-jBu"/>
                                                 <constraint firstItem="i8q-G1-6On" firstAttribute="centerX" secondItem="VbO-be-Htx" secondAttribute="centerX" id="Nv5-tE-gfa"/>
+                                                <constraint firstAttribute="trailing" secondItem="JMF-wf-si4" secondAttribute="trailing" constant="67" id="O7l-KN-Eh2"/>
                                                 <constraint firstItem="kL4-B3-4a9" firstAttribute="top" secondItem="VbO-be-Htx" secondAttribute="top" constant="19" id="RJS-KM-nxo"/>
                                                 <constraint firstItem="8qF-sT-ZT5" firstAttribute="top" secondItem="JMF-wf-si4" secondAttribute="bottom" constant="16" id="UEo-JZ-P1f"/>
                                                 <constraint firstItem="kL4-B3-4a9" firstAttribute="centerX" secondItem="VbO-be-Htx" secondAttribute="centerX" id="bOk-0U-Yo5"/>
@@ -199,6 +201,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="i8q-G1-6On" secondAttribute="trailing" id="fC0-7H-xPa"/>
                                                 <constraint firstItem="JMF-wf-si4" firstAttribute="centerX" secondItem="VbO-be-Htx" secondAttribute="centerX" id="g4o-fx-neD"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="8qF-sT-ZT5" secondAttribute="bottom" constant="8" id="gSC-En-1j6"/>
+                                                <constraint firstItem="JMF-wf-si4" firstAttribute="leading" secondItem="VbO-be-Htx" secondAttribute="leading" constant="67" id="jv7-5e-G2e"/>
                                                 <constraint firstItem="JMF-wf-si4" firstAttribute="top" secondItem="V5d-nT-CzP" secondAttribute="bottom" constant="8" id="pxh-d7-4K5"/>
                                                 <constraint firstItem="8qF-sT-ZT5" firstAttribute="centerX" secondItem="VbO-be-Htx" secondAttribute="centerX" id="slC-e6-cvd"/>
                                                 <constraint firstItem="8qF-sT-ZT5" firstAttribute="leading" secondItem="VbO-be-Htx" secondAttribute="leading" constant="164.5" id="wpI-5a-fil"/>
@@ -222,6 +225,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="btnDone" destination="1ec-JW-Ryw" id="bHA-zE-srd"/>
+                        <outlet property="datePicker" destination="V5d-nT-CzP" id="uII-DN-8gR"/>
                         <outlet property="txtField" destination="i8q-G1-6On" id="B04-EL-Rcw"/>
                     </connections>
                 </tableViewController>

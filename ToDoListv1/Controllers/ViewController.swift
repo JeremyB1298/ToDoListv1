@@ -64,7 +64,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         cell.lblTitle.text = DataModel.shared().list![indexPath.row].title
-        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMM yyyy"
+        let selectedDate = dateFormatter.string(from: DataModel.shared().list![indexPath.row].date)
+        cell.lblDate.text = selectedDate
         if DataModel.shared().list![indexPath.row].checked == true {
             cell.lblCheckmark.isHidden = false
         } else {

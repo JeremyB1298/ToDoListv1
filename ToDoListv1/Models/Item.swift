@@ -13,10 +13,12 @@ class Item: Codable, CustomStringConvertible {
     
     var title: String
     var checked: Bool
+    var date: Date
     
-    init(_ title: String,_ checked: Bool = false) {
+    init(_ title: String,_ date: Date,_ checked: Bool = false) {
         self.title = title
         self.checked = checked
+        self.date = date
     }
     
     var description: String {

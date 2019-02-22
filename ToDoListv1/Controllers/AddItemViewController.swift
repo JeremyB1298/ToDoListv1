@@ -16,6 +16,7 @@ protocol AddItemTableViewDelegate {
 
 class AddItemTableViewController: UITableViewController {
 
+    @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var txtField: UITextField!
     @IBOutlet weak var btnDone: UIBarButtonItem!
     
@@ -28,16 +29,19 @@ class AddItemTableViewController: UITableViewController {
         if itemToEdit != nil {
             navigationController?.title = "Edit Item"
             txtField.text = itemToEdit?.title
+            datePicker.date = (itemToEdit?.date)!
         } else {
             navigationController?.title = "Add Item"
         }
-        
+        datePicker.datePickerMode = UIDatePicker.Mode.date
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         txtField.becomeFirstResponder()
-        btnDone.isEnabled = false
+        if (txtField.text?.isEmpty)! {
+            btnDone.isEnabled = false
+        }
     }
 
     @IBAction func actnDone(_ sender: Any) {
@@ -47,12 +51,13 @@ class AddItemTableViewController: UITableViewController {
                 return
             }
             itemToEdit?.title = txt
+            itemToEdit?.date = datePicker.date
             delegate?.editItemFinish(controller: self, item: itemToEdit!)
         } else {
             guard let txt = txtField.text else {
                 return
             }
-            delegate?.addItemFinish(controller: self, item: Item( txt))
+            delegate?.addItemFinish(controller: self, item: Item( txt, datePicker.date))
         }
     }
     
