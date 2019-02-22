@@ -58,7 +58,7 @@
                     <navigationItem key="navigationItem" title="List" id="9Uq-UX-nwh">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="7Zk-CU-u61">
                             <connections>
-                                <segue destination="UA7-2P-JcC" kind="show" id="w8x-Tn-Es1"/>
+                                <segue destination="nt5-qk-M37" kind="show" identifier="addItemIdentifier" id="Yke-c4-jIn"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -69,14 +69,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="976.79999999999995" y="25.637181409295355"/>
-        </scene>
-        <!--itemsTest-->
-        <scene sceneID="end-8w-wX1">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Items" referencedIdentifier="itemsTest" id="UA7-2P-JcC" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="B9W-CA-Dy0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1065" y="-499"/>
         </scene>
         <!--Add Item-->
         <scene sceneID="4Ig-0e-xwj">
