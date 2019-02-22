@@ -10,10 +10,17 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var listItem = [Item]()
     var filteredTListItem = [Item]()
     @IBOutlet weak var tableView: UITableView!
     var resultSearchController = UISearchController()
+    
+    static var documentDirectory: URL {
+        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    }
+    
+    static var dataFileUrl: URL {
+        return ViewController.documentDirectory.appendingPathComponent("list").appendingPathExtension("json")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,72 +50,35 @@ class ViewController: UIViewController {
             guard let cell = sender as? UITableViewCell, let id = tableView.indexPath(for: cell)?.row else {
                 return
             }
-            vc.itemToEdit = listItem[id]
+            vc.itemToEdit = DataModel.shared().list![id]
         }
     }
-    
-    //MARK: - Actions
-    
-//    @IBAction func actnAdd(_ sender: Any) {
-//
-//        let alertController = UIAlertController(title: "ToDoListv1", message: "New item ?", preferredStyle: .alert)
-//        alertController.addTextField { (textField : UITextField!) -> Void in
-//            textField.placeholder = "Enter Item Name"
-//        }
-//
-//        let okAction = UIAlertAction(title: "ok", style: .default, handler: {(action) in
-//
-//            let textField = alertController.textFields!.first
-//
-//            guard let text = textField!.text, !text.isEmpty else {
-//                return
-//            }
-//
-//
-//        })
-//
-//        let cancelAction = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
-//
-//        alertController.addAction(okAction)
-//        alertController.addAction(cancelAction)
-//
-//        present(alertController, animated: true, completion: nil)
-//    }
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifier")!
-        
-        
-        if (resultSearchController.isActive) {
-            cell.textLabel?.text = filteredTListItem[indexPath.row].title
-            if filteredTListItem[indexPath.row].checked == true {
-                cell.accessoryType = UITableViewCell.AccessoryType.checkmark
-            } else {
-                cell.accessoryType = UITableViewCell.AccessoryType.none
-            }
-            
-            return cell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifier") as? ItemTableViewCell else {
+            return UITableViewCell()
         }
-        else {
-            cell.textLabel?.text = listItem[indexPath.row].title
-            if listItem[indexPath.row].checked == true {
-                cell.accessoryType = UITableViewCell.AccessoryType.checkmark
-            } else {
-                cell.accessoryType = UITableViewCell.AccessoryType.none
-            }
-            return cell
+        
+        cell.lblTitle.text = DataModel.shared().list![indexPath.row].title
+        
+        if DataModel.shared().list![indexPath.row].checked == true {
+            cell.lblCheckmark.isHidden = false
+        } else {
+            cell.lblCheckmark.isHidden = true
         }
+        
+        return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if  (resultSearchController.isActive) {
             return filteredTListItem.count
         } else {
-            return listItem.count
+            return DataModel.shared().list!.count
         }
     }
     
@@ -116,22 +86,22 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let currentCell = tableView.cellForRow(at: indexPath)
+        guard let currentCell = tableView.cellForRow(at: indexPath) as? ItemTableViewCell else {
+            return
+        }
         
-        if listItem[indexPath.row].checked == true {
-            
-            currentCell?.accessoryType = UITableViewCell.AccessoryType.none
-            listItem[indexPath.row].checked = false
+        if DataModel.shared().list![indexPath.row].checked == true {
+            currentCell.lblCheckmark.isHidden = true
+            DataModel.shared().list![indexPath.row].checked = false
         } else {
-            
-            currentCell?.accessoryType = UITableViewCell.AccessoryType.checkmark
-            listItem[indexPath.row].checked = true
+            currentCell.lblCheckmark.isHidden = false
+            DataModel.shared().list![indexPath.row].checked = true
         }
         
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        listItem.remove(at: indexPath.row)
+        DataModel.shared().list!.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
     }
     
@@ -141,9 +111,9 @@ extension ViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         filteredTListItem.removeAll(keepingCapacity: false)
         if searchController.searchBar.text!.lowercased().isEmpty {
-            filteredTListItem =  listItem
+            filteredTListItem =  DataModel.shared().list!
         } else {
-            filteredTListItem =  listItem.filter { $0.title!.contains(searchController.searchBar.text!.lowercased()) }
+            filteredTListItem =  DataModel.shared().list!.filter { $0.title.contains(searchController.searchBar.text!.lowercased()) }
         }
         self.tableView.reloadData()
     }
@@ -154,16 +124,18 @@ extension ViewController: AddItemTableViewDelegate {
     func editItemFinish(controller: UITableViewController, item: Item) {
         controller.navigationController?.popViewController(animated: true)
         
-        guard let index = listItem.firstIndex(where: { $0 === item }) else {
+        guard let index = DataModel.shared().list!.firstIndex(where: { $0 === item }) else {
             return
         }
-        listItem[index] = item
-        tableView.reloadRows(at: [IndexPath(item: index, section: 0)], with: UITableView.RowAnimation.automatic)
+        DataModel.shared().list![index] = item
+        DataModel.shared().list = DataModel.shared().sortList(list: DataModel.shared().list!)
+        tableView.reloadData()
     }
     
     func addItemFinish(controller: UITableViewController, item: Item) {
         controller.navigationController?.popViewController(animated: true)
-        listItem.append(item)
-        tableView.insertRows(at: [IndexPath(item: self.listItem.count-1, section: 0)], with: UITableView.RowAnimation.top)
+        DataModel.shared().list!.append(item)
+        DataModel.shared().list = DataModel.shared().sortList(list: DataModel.shared().list!)
+        tableView.reloadData()
     }
 }

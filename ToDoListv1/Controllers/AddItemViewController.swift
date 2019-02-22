@@ -25,7 +25,7 @@ class AddItemTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if itemToEdit == nil {
+        if itemToEdit != nil {
             navigationController?.title = "Edit Item"
             txtField.text = itemToEdit?.title
         } else {
@@ -42,7 +42,7 @@ class AddItemTableViewController: UITableViewController {
 
     @IBAction func actnDone(_ sender: Any) {
         
-        if itemToEdit == nil {
+        if itemToEdit != nil {
             guard let txt = txtField.text else {
                 return
             }

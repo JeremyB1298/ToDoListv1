@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		088C71A422204D7D0063A1AE /* ItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088C71A322204D7D0063A1AE /* ItemTableViewCell.swift */; };
+		088C71A62220508A0063A1AE /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088C71A52220508A0063A1AE /* DataModel.swift */; };
 		08971A40221FEEFB006190D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08971A3F221FEEFB006190D8 /* AppDelegate.swift */; };
 		08971A42221FEEFB006190D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08971A41221FEEFB006190D8 /* ViewController.swift */; };
 		08971A45221FEEFB006190D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08971A43221FEEFB006190D8 /* Main.storyboard */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		088C71A322204D7D0063A1AE /* ItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTableViewCell.swift; sourceTree = "<group>"; };
+		088C71A52220508A0063A1AE /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		08971A3C221FEEFB006190D8 /* ToDoListv1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoListv1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08971A3F221FEEFB006190D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		08971A41221FEEFB006190D8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -75,6 +79,8 @@
 			isa = PBXGroup;
 			children = (
 				08971A512220119A006190D8 /* Item.swift */,
+				088C71A322204D7D0063A1AE /* ItemTableViewCell.swift */,
+				088C71A52220508A0063A1AE /* DataModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -171,8 +177,10 @@
 			files = (
 				08971A42221FEEFB006190D8 /* ViewController.swift in Sources */,
 				08971A5D22202DC9006190D8 /* AddItemViewController.swift in Sources */,
+				088C71A422204D7D0063A1AE /* ItemTableViewCell.swift in Sources */,
 				08971A522220119A006190D8 /* Item.swift in Sources */,
 				08971A40221FEEFB006190D8 /* AppDelegate.swift in Sources */,
+				088C71A62220508A0063A1AE /* DataModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

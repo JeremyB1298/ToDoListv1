@@ -28,7 +28,7 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="CellIdentifier" id="mqy-P9-cvr">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="CellIdentifier" id="mqy-P9-cvr" customClass="ItemTableViewCell" customModule="ToDoListv1" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mqy-P9-cvr" id="gK3-4c-eqG">
@@ -65,6 +65,8 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="lblCheckmark" destination="iHv-Pu-7PT" id="VIa-N4-T0L"/>
+                                            <outlet property="lblTitle" destination="SlF-rB-EJi" id="sa0-Pj-eXr"/>
                                             <segue destination="nt5-qk-M37" kind="show" identifier="editItemIdentifier" trigger="accessoryAction" id="aW3-TD-JZT"/>
                                         </connections>
                                     </tableViewCell>
@@ -127,6 +129,7 @@
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
                                                         <action selector="actnDone:" destination="nt5-qk-M37" eventType="editingDidEndOnExit" id="awc-8S-Fde"/>
+                                                        <outlet property="delegate" destination="nt5-qk-M37" id="Xev-1z-frF"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -160,7 +163,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qq1-pr-79B" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1738" y="-481"/>
+            <point key="canvasLocation" x="2065" y="-440"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hgD-qT-ZVp">
