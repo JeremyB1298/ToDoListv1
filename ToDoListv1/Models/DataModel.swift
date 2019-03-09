@@ -11,7 +11,7 @@ import UIKit
 
 class DataModel {
     
-    var list: [Item]?
+    var list: [Event]?
     
     private static var sharedNetworkManager: DataModel = {
         let dataModel = DataModel()
@@ -20,7 +20,7 @@ class DataModel {
     }()
     
     private init() {
-        list = loadChecklist()
+        loadChecklist()
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(saveChecklists),
@@ -30,43 +30,31 @@ class DataModel {
     }
     
     @objc func saveChecklists() {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        do {
-            let data = try encoder.encode(self.list)
-            print(String(data: data, encoding: .utf8)!)
-            try data.write(to: ViewController.dataFileUrl)
-        } catch {
-            print(error)
+
+        guard let listEvent = list else {
+            return
         }
+        
+        for event in listEvent {
+            DataBase().updateEvent(event: event)
+        }
+        
     }
     
     class func shared() -> DataModel {
         return sharedNetworkManager
     }
     
-    private func loadChecklist() -> [Item] {
-        if !FileManager.default.fileExists(atPath: ViewController.dataFileUrl.path) {
-            return []
-        }else {
-            do {
-                let datas = try Data(contentsOf: ViewController.dataFileUrl)
-                
-                let decoder = JSONDecoder()
-                let list = try decoder.decode([Item].self, from: datas)
-                return sortList(list: list)
-            }catch {
-                print(error)
-            }
-        }
-        return []
+    func loadChecklist() {
+        list = DataBase().loadData()
     }
     
-    func sortList(list: [Item]) -> [Item] {
+    func sortList(list: [Event]) -> [Event] {
         if list.count >= 2 {
-            return list.sorted(by: { $0.title < $1.title })
+            //return list.sorted(by: { $0.title < $1.title })
         }else {
             return list
         }
+        return list
     }
 }

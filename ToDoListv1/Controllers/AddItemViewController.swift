@@ -9,8 +9,8 @@
 import UIKit
 
 protocol AddItemTableViewDelegate {
-    func addItemFinish(controller: UITableViewController, item: Item)
-    func editItemFinish(controller: UITableViewController, item: Item)
+    func addItemFinish(controller: UITableViewController)
+    func editItemFinish(controller: UITableViewController, item: Event)
 }
 
 
@@ -19,17 +19,20 @@ class AddItemTableViewController: UITableViewController {
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var txtField: UITextField!
     @IBOutlet weak var btnDone: UIBarButtonItem!
+    @IBOutlet weak var imageView: UIImageView!
+    
+    var imagePicker: UIImagePickerController!
     
     var delegate: AddItemTableViewDelegate?
-    var itemToEdit: Item?
+    var itemToEdit: Event?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         if itemToEdit != nil {
             navigationController?.title = "Edit Item"
             txtField.text = itemToEdit?.title
-            datePicker.date = (itemToEdit?.date)!
+           // datePicker.date = (itemToEdit?.date)!
         } else {
             navigationController?.title = "Add Item"
         }
@@ -38,7 +41,7 @@ class AddItemTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        txtField.becomeFirstResponder()
+        //txtField.becomeFirstResponder()
         if (txtField.text?.isEmpty)! {
             btnDone.isEnabled = false
         }
@@ -51,14 +54,30 @@ class AddItemTableViewController: UITableViewController {
                 return
             }
             itemToEdit?.title = txt
-            itemToEdit?.date = datePicker.date
-            delegate?.editItemFinish(controller: self, item: itemToEdit!)
+            //itemToEdit?.date = datePicker.date
+            //delegate?.editItemFinish(controller: self, item: itemToEdit!)
         } else {
             guard let txt = txtField.text else {
                 return
             }
-            delegate?.addItemFinish(controller: self, item: Item( txt, datePicker.date))
+            guard let image = imageView.image?.pngData() else {
+                return
+            }
+            DataBase().insertEvent(title: txt, date: datePicker.date, image: image)
+            delegate?.addItemFinish(controller: self)
         }
+    }
+    @IBAction func actnImage(_ sender: Any) {
+        imagePicker =  UIImagePickerController()
+        imagePicker.delegate = self 
+        imagePicker.sourceType = .photoLibrary
+        
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        imagePicker.dismiss(animated: true, completion: nil)
+        imageView.image = info[.originalImage] as? UIImage
     }
     
 }
@@ -73,4 +92,7 @@ extension AddItemTableViewController: UITextFieldDelegate {
         }
         return true
     }
+}
+extension AddItemTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
 }

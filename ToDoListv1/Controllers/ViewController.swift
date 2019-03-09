@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var filteredTListItem = [Item]()
+    var filteredTListItem = [Event]()
     @IBOutlet weak var tableView: UITableView!
     var resultSearchController = UISearchController()
     
@@ -66,8 +66,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.lblTitle.text = DataModel.shared().list![indexPath.row].title
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMM yyyy"
-        let selectedDate = dateFormatter.string(from: DataModel.shared().list![indexPath.row].date)
+        let selectedDate = dateFormatter.string(from: DataModel.shared().list![indexPath.row].date ?? Date())
         cell.lblDate.text = selectedDate
+        guard let dataImage = DataModel.shared().list![indexPath.row].image else {
+            return UITableViewCell()
+        }
+        cell.imageView?.image = UIImage(data: dataImage)
         if DataModel.shared().list![indexPath.row].checked == true {
             cell.lblCheckmark.isHidden = false
         } else {
@@ -96,9 +100,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         if DataModel.shared().list![indexPath.row].checked == true {
             currentCell.lblCheckmark.isHidden = true
             DataModel.shared().list![indexPath.row].checked = false
+            //DataBase().updateEvent(event: DataModel.shared().list![indexPath.row])
         } else {
             currentCell.lblCheckmark.isHidden = false
             DataModel.shared().list![indexPath.row].checked = true
+            //DataBase().updateEvent(event: DataModel.shared().list![indexPath.row])
         }
         
     }
@@ -116,7 +122,7 @@ extension ViewController: UISearchResultsUpdating {
         if searchController.searchBar.text!.lowercased().isEmpty {
             filteredTListItem =  DataModel.shared().list!
         } else {
-            filteredTListItem =  DataModel.shared().list!.filter { $0.title.contains(searchController.searchBar.text!.lowercased()) }
+            filteredTListItem =  DataModel.shared().list!.filter { $0.title?.contains(searchController.searchBar.text!.lowercased()) ?? true }
         }
         self.tableView.reloadData()
     }
@@ -124,7 +130,14 @@ extension ViewController: UISearchResultsUpdating {
 }
 
 extension ViewController: AddItemTableViewDelegate {
-    func editItemFinish(controller: UITableViewController, item: Item) {
+    func addItemFinish(controller: UITableViewController) {
+        controller.navigationController?.popViewController(animated: true)
+        //DataModel.shared().list = DataModel.shared().sortList(list: DataModel.shared().list!)
+        DataModel.shared().loadChecklist()
+        tableView.reloadData()
+    }
+    
+    func editItemFinish(controller: UITableViewController, item: Event) {
         controller.navigationController?.popViewController(animated: true)
         
         guard let index = DataModel.shared().list!.firstIndex(where: { $0 === item }) else {
@@ -135,10 +148,10 @@ extension ViewController: AddItemTableViewDelegate {
         tableView.reloadData()
     }
     
-    func addItemFinish(controller: UITableViewController, item: Item) {
-        controller.navigationController?.popViewController(animated: true)
-        DataModel.shared().list!.append(item)
-        DataModel.shared().list = DataModel.shared().sortList(list: DataModel.shared().list!)
-        tableView.reloadData()
-    }
+//    func addItemFinish(controller: UITableViewController, item: Event) {
+//        controller.navigationController?.popViewController(animated: true)
+//        DataModel.shared().list!.append(item)
+//        DataModel.shared().list = DataModel.shared().sortList(list: DataModel.shared().list!)
+//        tableView.reloadData()
+//    }
 }
