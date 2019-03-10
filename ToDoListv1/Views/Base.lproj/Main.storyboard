@@ -163,10 +163,13 @@
                                                     </date>
                                                 </datePicker>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JMF-wf-si4">
-                                                    <rect key="frame" x="67" y="212" width="241" height="291"/>
+                                                    <rect key="frame" x="67" y="212" width="241" height="250"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="250" id="0qO-8F-cWq"/>
+                                                    </constraints>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8qF-sT-ZT5">
-                                                    <rect key="frame" x="164.5" y="519" width="46" height="30"/>
+                                                    <rect key="frame" x="164.5" y="478" width="46" height="71"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="46" id="Q5x-dg-fZs"/>
                                                     </constraints>

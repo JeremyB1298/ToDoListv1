@@ -137,13 +137,9 @@ extension ViewController: AddItemTableViewDelegate {
         tableView.reloadData()
     }
     
-    func editItemFinish(controller: UITableViewController, item: Event) {
+    func editItemFinish(controller: UITableViewController) {
         controller.navigationController?.popViewController(animated: true)
         
-        guard let index = DataModel.shared().list!.firstIndex(where: { $0 === item }) else {
-            return
-        }
-        DataModel.shared().list![index] = item
         DataModel.shared().list = DataModel.shared().sortList(list: DataModel.shared().list!)
         tableView.reloadData()
     }

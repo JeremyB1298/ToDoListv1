@@ -10,7 +10,7 @@ import UIKit
 
 protocol AddItemTableViewDelegate {
     func addItemFinish(controller: UITableViewController)
-    func editItemFinish(controller: UITableViewController, item: Event)
+    func editItemFinish(controller: UITableViewController)
 }
 
 
@@ -32,7 +32,8 @@ class AddItemTableViewController: UITableViewController {
         if itemToEdit != nil {
             navigationController?.title = "Edit Item"
             txtField.text = itemToEdit?.title
-           // datePicker.date = (itemToEdit?.date)!
+            datePicker.date = (itemToEdit?.date)!
+            imageView.image = UIImage(data: (itemToEdit?.image)!)
         } else {
             navigationController?.title = "Add Item"
         }
@@ -54,8 +55,10 @@ class AddItemTableViewController: UITableViewController {
                 return
             }
             itemToEdit?.title = txt
-            //itemToEdit?.date = datePicker.date
-            //delegate?.editItemFinish(controller: self, item: itemToEdit!)
+            itemToEdit?.date = datePicker.date
+            itemToEdit?.image = imageView.image?.pngData()
+            DataBase().updateEvent(event: itemToEdit!)
+            delegate?.editItemFinish(controller: self)
         } else {
             guard let txt = txtField.text else {
                 return
