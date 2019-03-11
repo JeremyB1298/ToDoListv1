@@ -35,13 +35,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="308" height="80.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WE3-vF-B89">
-                                                    <rect key="frame" x="124" y="10.5" width="60" height="60"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="60" id="oUU-Fm-f04"/>
-                                                        <constraint firstAttribute="height" constant="60" id="opU-da-ImA"/>
-                                                    </constraints>
-                                                </imageView>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="GRV-6m-KTo">
                                                     <rect key="frame" x="246" y="20" width="42" height="41"/>
                                                     <subviews>
@@ -69,14 +62,11 @@
                                             <constraints>
                                                 <constraint firstItem="GRV-6m-KTo" firstAttribute="centerY" secondItem="gK3-4c-eqG" secondAttribute="centerY" id="8OX-q0-Bj5"/>
                                                 <constraint firstItem="iHv-Pu-7PT" firstAttribute="centerY" secondItem="gK3-4c-eqG" secondAttribute="centerY" id="EaU-av-3kO"/>
-                                                <constraint firstItem="WE3-vF-B89" firstAttribute="centerX" secondItem="gK3-4c-eqG" secondAttribute="centerX" id="UFD-Hm-Lk8"/>
                                                 <constraint firstAttribute="trailing" secondItem="GRV-6m-KTo" secondAttribute="trailing" constant="20" id="hgb-gJ-p7c"/>
-                                                <constraint firstItem="WE3-vF-B89" firstAttribute="centerY" secondItem="gK3-4c-eqG" secondAttribute="centerY" id="kV6-0M-Rvr"/>
                                                 <constraint firstItem="iHv-Pu-7PT" firstAttribute="leading" secondItem="gK3-4c-eqG" secondAttribute="leading" constant="8" id="saf-Tb-wJm"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="imageView" destination="WE3-vF-B89" id="vR1-Ko-1ox"/>
                                             <outlet property="lblCheckmark" destination="iHv-Pu-7PT" id="VIa-N4-T0L"/>
                                             <outlet property="lblDate" destination="SlF-rB-EJi" id="GOU-0h-ci6"/>
                                             <outlet property="lblTitle" destination="p22-Rd-7D5" id="U88-yJ-Km7"/>

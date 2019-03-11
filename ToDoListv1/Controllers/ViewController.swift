@@ -71,13 +71,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         guard let dataImage = DataModel.shared().list![indexPath.row].image else {
             return UITableViewCell()
         }
-        cell.imageView?.image = UIImage(data: dataImage)
+//        cell.imageView?.image = UIImage(data: dataImage)
         if DataModel.shared().list![indexPath.row].checked == true {
             cell.lblCheckmark.isHidden = false
         } else {
             cell.lblCheckmark.isHidden = true
         }
-        
         return cell
     }
     
