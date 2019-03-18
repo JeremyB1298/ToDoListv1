@@ -41,7 +41,7 @@ class DataBase {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         let managedContext = appDelegate.persistentContainer.viewContext
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
-        request.predicate = NSPredicate(format: "id = %@", event.id ?? "")
+        request.predicate = NSPredicate(format: "id == \(event.id)")
         request.returnsObjectsAsFaults = false
         do {
             guard let result = try managedContext.fetch(request) as? [Event] else {

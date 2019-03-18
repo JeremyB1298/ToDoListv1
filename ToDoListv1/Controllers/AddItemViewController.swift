@@ -33,7 +33,10 @@ class AddItemTableViewController: UITableViewController {
             navigationController?.title = "Edit Item"
             txtField.text = itemToEdit?.title
             datePicker.date = (itemToEdit?.date)!
-            imageView.image = UIImage(data: (itemToEdit?.image)!)
+            if itemToEdit?.image != nil {
+                imageView.image = UIImage(data: (itemToEdit?.image)!)
+            }
+            
         } else {
             navigationController?.title = "Add Item"
         }
