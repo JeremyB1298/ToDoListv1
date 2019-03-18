@@ -40,20 +40,20 @@ class AddItemTableViewController: UITableViewController {
                 imageView.image = UIImage(data: (itemToEdit?.image)!)
             }
             txtFieldDesc.text = itemToEdit?.desc
-            initLblDate(date: (itemToEdit?.date)!)
+            lblDateCreate.text = initLblDate(date: (itemToEdit?.date)!)
         } else {
             navigationController?.title = "Add Item"
-            initLblDate(date: Date())
+            lblDateCreate.text = initLblDate(date: Date())
         }
         datePicker.datePickerMode = UIDatePicker.Mode.date
         
     }
     
-    func initLblDate(date: Date) {
+    func initLblDate(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy hh:mm at"
         let selectedDate = dateFormatter.string(from: date)
-        lblDateCreate.text = selectedDate
+        return selectedDate
     }
     
     func showDatePicker() {
@@ -174,6 +174,9 @@ class AddItemTableViewController: UITableViewController {
             }
             
         }
+    }
+    @IBAction func dateChanged(_ sender: Any) {
+        lblDateCreate.text = initLblDate(date: datePicker.date)
     }
     
 }
