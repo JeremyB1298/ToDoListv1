@@ -63,11 +63,14 @@ class AddItemTableViewController: UITableViewController {
             guard let txt = txtField.text else {
                 return
             }
-            guard let image = imageView.image?.pngData() else {
-                return
+            if let image = imageView.image?.pngData() {
+                DataBase().insertEvent(title: txt, date: datePicker.date, image: image)
+                delegate?.addItemFinish(controller: self)
+            } else {
+                DataBase().insertEvent(title: txt, date: datePicker.date)
+                delegate?.addItemFinish(controller: self)
             }
-            DataBase().insertEvent(title: txt, date: datePicker.date, image: image)
-            delegate?.addItemFinish(controller: self)
+            
         }
     }
     @IBAction func actnImage(_ sender: Any) {

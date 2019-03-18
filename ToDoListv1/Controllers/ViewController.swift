@@ -63,20 +63,37 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         
-        cell.lblTitle.text = DataModel.shared().list![indexPath.row].title
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd MMM yyyy"
-        let selectedDate = dateFormatter.string(from: DataModel.shared().list![indexPath.row].date ?? Date())
-        cell.lblDate.text = selectedDate
-        guard let dataImage = DataModel.shared().list![indexPath.row].image else {
-            return UITableViewCell()
-        }
-//        cell.imageView?.image = UIImage(data: dataImage)
-        if DataModel.shared().list![indexPath.row].checked == true {
-            cell.lblCheckmark.isHidden = false
+        if (resultSearchController.isActive) {
+            cell.lblTitle.text = filteredTListItem[indexPath.row].title
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd MMM yyyy"
+            let selectedDate = dateFormatter.string(from: filteredTListItem[indexPath.row].date ?? Date())
+            cell.lblDate.text = selectedDate
+            if let dataImage = filteredTListItem[indexPath.row].image  {
+                cell.imageView?.image = UIImage(data: dataImage)
+            }
+            if filteredTListItem[indexPath.row].checked == true {
+                cell.lblCheckmark.isHidden = false
+            } else {
+                cell.lblCheckmark.isHidden = true
+            }
         } else {
-            cell.lblCheckmark.isHidden = true
+            cell.lblTitle.text = DataModel.shared().list![indexPath.row].title
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd MMM yyyy"
+            let selectedDate = dateFormatter.string(from: DataModel.shared().list![indexPath.row].date ?? Date())
+            cell.lblDate.text = selectedDate
+            if let dataImage = DataModel.shared().list![indexPath.row].image  {
+                cell.imageView?.image = UIImage(data: dataImage)
+            }
+            if DataModel.shared().list![indexPath.row].checked == true {
+                cell.lblCheckmark.isHidden = false
+            } else {
+                cell.lblCheckmark.isHidden = true
+            }
         }
+        
+        
         return cell
     }
     

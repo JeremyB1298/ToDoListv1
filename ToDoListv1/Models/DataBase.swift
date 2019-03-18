@@ -12,21 +12,25 @@ import CoreData
 
 class DataBase {
 
-    public func insertEvent(title: String, date: Date, image: Data) {
+    public func insertEvent(title: String, date: Date, image: Data? = nil) {
         
-        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        
+        //let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        //"\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! }) + "\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! })
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         let managedContext = appDelegate.persistentContainer.viewContext
         let newItem = NSEntityDescription.insertNewObject(forEntityName: "Event", into: managedContext) as! Event
-        newItem.id = "\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! }) + "\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! })
+        newItem.id = UserDefaults.standard.object(forKey: "idEvent") as! Int64
         newItem.title = title
         newItem.date = date
         newItem.checked = false
-        newItem.image = image
+        if image != nil {
+            newItem.image = image
+        }
         
         do {
             try managedContext.save()
+            let id = UserDefaults.standard.object(forKey: "idEvent") as! Int
+            UserDefaults.standard.set(id + 1, forKey: "idEvent")
         } catch {
             print("Failed saving")
         }
