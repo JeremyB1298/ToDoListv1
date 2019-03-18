@@ -24,7 +24,7 @@ class AddItemTableViewController: UITableViewController {
     var imagePicker: UIImagePickerController!
     
     var delegate: AddItemTableViewDelegate?
-    var itemToEdit: Event?
+    var itemToEdit: Event? 
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +33,10 @@ class AddItemTableViewController: UITableViewController {
             navigationController?.title = "Edit Item"
             txtField.text = itemToEdit?.title
             datePicker.date = (itemToEdit?.date)!
-            imageView.image = UIImage(data: (itemToEdit?.image)!)
+            if itemToEdit?.image != nil {
+                imageView.image = UIImage(data: (itemToEdit?.image)!)
+            }
+            
         } else {
             navigationController?.title = "Add Item"
         }
@@ -57,17 +60,17 @@ class AddItemTableViewController: UITableViewController {
             itemToEdit?.title = txt
             itemToEdit?.date = datePicker.date
             itemToEdit?.image = imageView.image?.pngData()
-            DataBase().updateEvent(event: itemToEdit!)
+            DataBase.shared().updateEvent(event: itemToEdit!)
             delegate?.editItemFinish(controller: self)
         } else {
             guard let txt = txtField.text else {
                 return
             }
             if let image = imageView.image?.pngData() {
-                DataBase().insertEvent(title: txt, date: datePicker.date, image: image)
+                DataBase.shared().insertEvent(title: txt, date: datePicker.date, image: image)
                 delegate?.addItemFinish(controller: self)
             } else {
-                DataBase().insertEvent(title: txt, date: datePicker.date)
+                DataBase.shared().insertEvent(title: txt, date: datePicker.date)
                 delegate?.addItemFinish(controller: self)
             }
             
