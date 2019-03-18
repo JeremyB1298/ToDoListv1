@@ -128,16 +128,25 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if (resultSearchController.isActive) {
-            DataBase.shared().deleteEvent(event: filteredTListItem[indexPath.row])
-            DataModel.shared().list!.remove(at: (DataModel.shared().list?.firstIndex(of: filteredTListItem[indexPath.row]))! )
-            filteredTListItem.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
-        } else {
-            DataBase.shared().deleteEvent(event: DataModel.shared().list![indexPath.row])
-            DataModel.shared().list!.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
-        }
+        
+        let alert = UIAlertController(title: "Alert", message: "Voulez-vous supprimer cet event ?", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "oui", style: UIAlertAction.Style.destructive, handler: {
+            
+            action in
+            if (self.resultSearchController.isActive) {
+                DataBase.shared().deleteEvent(event: self.filteredTListItem[indexPath.row])
+                DataModel.shared().list!.remove(at: (DataModel.shared().list?.firstIndex(of: self.filteredTListItem[indexPath.row]))! )
+                self.filteredTListItem.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+            } else {
+                DataBase.shared().deleteEvent(event: DataModel.shared().list![indexPath.row])
+                DataModel.shared().list!.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+            }
+        }))
+        
+        alert.addAction(UIAlertAction(title: "non", style: UIAlertAction.Style.cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
         
     }
     
