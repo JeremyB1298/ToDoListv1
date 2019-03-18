@@ -220,24 +220,19 @@
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ItG-Tw-mx9">
                                                     <rect key="frame" x="127.5" y="39.5" width="120" height="130"/>
+                                                    <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <accessibility key="accessibilityConfiguration">
+                                                        <accessibilityTraits key="traits" image="YES" staticText="YES"/>
+                                                        <bool key="isElement" value="NO"/>
+                                                    </accessibility>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="130" id="2Po-kp-1Wd"/>
                                                         <constraint firstAttribute="width" constant="120" id="osb-zZ-cUC"/>
                                                     </constraints>
                                                 </imageView>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0YY-hH-r7c">
-                                                    <rect key="frame" x="34" y="89.5" width="46" height="30"/>
-                                                    <state key="normal" title="Button"/>
-                                                    <connections>
-                                                        <action selector="actnImage:" destination="nt5-qk-M37" eventType="touchUpInside" id="V3o-9v-Yeb"/>
-                                                    </connections>
-                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="ItG-Tw-mx9" firstAttribute="centerX" secondItem="L3Q-2D-ya4" secondAttribute="centerX" id="5q0-5G-bh0"/>
-                                                <constraint firstItem="0YY-hH-r7c" firstAttribute="centerY" secondItem="L3Q-2D-ya4" secondAttribute="centerY" id="GNY-Ai-6ge"/>
-                                                <constraint firstItem="ItG-Tw-mx9" firstAttribute="leading" secondItem="0YY-hH-r7c" secondAttribute="trailing" constant="47.5" id="TTv-Cz-MYQ"/>
-                                                <constraint firstItem="0YY-hH-r7c" firstAttribute="leading" secondItem="L3Q-2D-ya4" secondAttribute="leading" constant="34" id="VUd-WO-k82"/>
                                                 <constraint firstItem="ItG-Tw-mx9" firstAttribute="centerY" secondItem="L3Q-2D-ya4" secondAttribute="centerY" id="yG3-T9-o5J"/>
                                             </constraints>
                                         </tableViewCellContentView>

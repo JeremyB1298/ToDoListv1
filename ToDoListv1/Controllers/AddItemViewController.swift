@@ -46,7 +46,16 @@ class AddItemTableViewController: UITableViewController {
             lblDateCreate.text = initLblDate(date: Date())
         }
         datePicker.datePickerMode = UIDatePicker.Mode.date
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped)))
+    }
+    
+    @objc private func imageTapped(_ recognizer: UITapGestureRecognizer) {
+        imagePicker =  UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
         
+        present(imagePicker, animated: true, completion: nil)
     }
     
     func initLblDate(date: Date) -> String {
@@ -111,13 +120,6 @@ class AddItemTableViewController: UITableViewController {
             }
             
         }
-    }
-    @IBAction func actnImage(_ sender: Any) {
-        imagePicker =  UIImagePickerController()
-        imagePicker.delegate = self 
-        imagePicker.sourceType = .photoLibrary
-        
-        present(imagePicker, animated: true, completion: nil)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
