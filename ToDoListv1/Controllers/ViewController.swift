@@ -51,7 +51,10 @@ class ViewController: UIViewController {
                 return
             }
             vc.itemToEdit = DataModel.shared().list![id]
+        } else if segue.identifier == "listCategories" {
+            print("cacao")
         }
+
     }
 }
 
