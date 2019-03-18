@@ -220,24 +220,19 @@
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ItG-Tw-mx9">
                                                     <rect key="frame" x="127.5" y="39.5" width="120" height="130"/>
+                                                    <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <accessibility key="accessibilityConfiguration">
+                                                        <accessibilityTraits key="traits" image="YES" staticText="YES"/>
+                                                        <bool key="isElement" value="NO"/>
+                                                    </accessibility>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="130" id="2Po-kp-1Wd"/>
                                                         <constraint firstAttribute="width" constant="120" id="osb-zZ-cUC"/>
                                                     </constraints>
                                                 </imageView>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0YY-hH-r7c">
-                                                    <rect key="frame" x="34" y="89.5" width="46" height="30"/>
-                                                    <state key="normal" title="Button"/>
-                                                    <connections>
-                                                        <action selector="actnImage:" destination="nt5-qk-M37" eventType="touchUpInside" id="V3o-9v-Yeb"/>
-                                                    </connections>
-                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="ItG-Tw-mx9" firstAttribute="centerX" secondItem="L3Q-2D-ya4" secondAttribute="centerX" id="5q0-5G-bh0"/>
-                                                <constraint firstItem="0YY-hH-r7c" firstAttribute="centerY" secondItem="L3Q-2D-ya4" secondAttribute="centerY" id="GNY-Ai-6ge"/>
-                                                <constraint firstItem="ItG-Tw-mx9" firstAttribute="leading" secondItem="0YY-hH-r7c" secondAttribute="trailing" constant="47.5" id="TTv-Cz-MYQ"/>
-                                                <constraint firstItem="0YY-hH-r7c" firstAttribute="leading" secondItem="L3Q-2D-ya4" secondAttribute="leading" constant="34" id="VUd-WO-k82"/>
                                                 <constraint firstItem="ItG-Tw-mx9" firstAttribute="centerY" secondItem="L3Q-2D-ya4" secondAttribute="centerY" id="yG3-T9-o5J"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -311,11 +306,43 @@
                     </navigationItem>
                     <connections>
                         <outlet property="btnDone" destination="1ec-JW-Ryw" id="bHA-zE-srd"/>
+                        <outlet property="datePicker" destination="vjy-Nf-zKf" id="7fB-8b-CGB"/>
+                        <outlet property="datePickerCell" destination="mDB-aH-lDe" id="Mdg-o6-Yfg"/>
                         <outlet property="imageView" destination="ItG-Tw-mx9" id="W1S-73-0kR"/>
+                        <outlet property="lblDateCreate" destination="fJA-cZ-J4l" id="onf-R2-ftL"/>
                         <outlet property="txtField" destination="jYd-Vl-1Ar" id="sBR-ve-6Gk"/>
+                        <outlet property="txtFieldDesc" destination="Y5F-El-btz" id="lqj-YX-d8v"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qq1-pr-79B" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="180" id="mDB-aH-lDe">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="180"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mDB-aH-lDe" id="rDt-MW-WYm">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="179.5"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="vjy-Nf-zKf">
+                                <rect key="frame" x="0.0" y="8" width="375" height="162"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="162" id="MTL-di-OcH"/>
+                                </constraints>
+                                <date key="date" timeIntervalSinceReferenceDate="574598454.92226505">
+                                    <!--2019-03-18 10:40:54 +0000-->
+                                </date>
+                                <connections>
+                                    <action selector="dateChanged:" destination="nt5-qk-M37" eventType="valueChanged" id="KIu-Km-i7B"/>
+                                </connections>
+                            </datePicker>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="vjy-Nf-zKf" secondAttribute="bottom" constant="9.5" id="JN1-1L-yzw"/>
+                            <constraint firstAttribute="trailing" secondItem="vjy-Nf-zKf" secondAttribute="trailing" id="T5k-M4-uIQ"/>
+                            <constraint firstItem="vjy-Nf-zKf" firstAttribute="leading" secondItem="rDt-MW-WYm" secondAttribute="leading" id="wCa-Ug-mTg"/>
+                            <constraint firstItem="vjy-Nf-zKf" firstAttribute="top" secondItem="rDt-MW-WYm" secondAttribute="top" constant="8" id="zpR-vN-Ayf"/>
+                        </constraints>
+                    </tableViewCellContentView>
+                </tableViewCell>
             </objects>
             <point key="canvasLocation" x="1736.8" y="-481.70914542728639"/>
         </scene>

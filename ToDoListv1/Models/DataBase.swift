@@ -33,7 +33,7 @@ class DataBase {
         managedContext = appDelegate.persistentContainer.viewContext
     }
     
-    public func insertEvent(title: String, date: Date, image: Data? = nil) {
+    public func insertEvent(title: String, date: Date, image: Data? = nil, desc: String? = "") {
         
         //let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         //"\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! }) + "\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! })
@@ -45,6 +45,8 @@ class DataBase {
         if image != nil {
             newItem.image = image
         }
+        newItem.desc = desc
+
         
         do {
             try managedContext!.save()
