@@ -36,7 +36,7 @@ class DataModel {
         }
         
         for event in listEvent {
-            DataBase().updateEvent(event: event)
+            DataBase.shared().updateEvent(event: event)
         }
         
     }
@@ -46,7 +46,7 @@ class DataModel {
     }
     
     func loadChecklist() {
-        list = DataBase().loadData()
+        list = DataBase.shared().loadData()
     }
     
     func sortList(list: [Event]) -> [Event] {

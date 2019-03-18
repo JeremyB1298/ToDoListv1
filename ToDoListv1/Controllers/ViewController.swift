@@ -124,9 +124,17 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        DataBase.init().deleteEvent(event: DataModel.shared().list![indexPath.row])
-        DataModel.shared().list!.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+        if (resultSearchController.isActive) {
+            DataBase.shared().deleteEvent(event: filteredTListItem[indexPath.row])
+            DataModel.shared().list!.remove(at: (DataModel.shared().list?.firstIndex(of: filteredTListItem[indexPath.row]))! )
+            filteredTListItem.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+        } else {
+            DataBase.shared().deleteEvent(event: DataModel.shared().list![indexPath.row])
+            DataModel.shared().list!.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+        }
+        
     }
     
 }
