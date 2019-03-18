@@ -311,11 +311,40 @@
                     </navigationItem>
                     <connections>
                         <outlet property="btnDone" destination="1ec-JW-Ryw" id="bHA-zE-srd"/>
+                        <outlet property="datePicker" destination="vjy-Nf-zKf" id="7fB-8b-CGB"/>
+                        <outlet property="datePickerCell" destination="mDB-aH-lDe" id="Mdg-o6-Yfg"/>
                         <outlet property="imageView" destination="ItG-Tw-mx9" id="W1S-73-0kR"/>
+                        <outlet property="lblDateCreate" destination="fJA-cZ-J4l" id="onf-R2-ftL"/>
                         <outlet property="txtField" destination="jYd-Vl-1Ar" id="sBR-ve-6Gk"/>
+                        <outlet property="txtFieldDesc" destination="Y5F-El-btz" id="lqj-YX-d8v"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qq1-pr-79B" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="180" id="mDB-aH-lDe">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="180"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mDB-aH-lDe" id="rDt-MW-WYm">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="179.5"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="vjy-Nf-zKf">
+                                <rect key="frame" x="0.0" y="8" width="375" height="162"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="162" id="MTL-di-OcH"/>
+                                </constraints>
+                                <date key="date" timeIntervalSinceReferenceDate="574598454.92226505">
+                                    <!--2019-03-18 10:40:54 +0000-->
+                                </date>
+                            </datePicker>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="vjy-Nf-zKf" secondAttribute="bottom" constant="9.5" id="JN1-1L-yzw"/>
+                            <constraint firstAttribute="trailing" secondItem="vjy-Nf-zKf" secondAttribute="trailing" id="T5k-M4-uIQ"/>
+                            <constraint firstItem="vjy-Nf-zKf" firstAttribute="leading" secondItem="rDt-MW-WYm" secondAttribute="leading" id="wCa-Ug-mTg"/>
+                            <constraint firstItem="vjy-Nf-zKf" firstAttribute="top" secondItem="rDt-MW-WYm" secondAttribute="top" constant="8" id="zpR-vN-Ayf"/>
+                        </constraints>
+                    </tableViewCellContentView>
+                </tableViewCell>
             </objects>
             <point key="canvasLocation" x="1736.8" y="-481.70914542728639"/>
         </scene>
