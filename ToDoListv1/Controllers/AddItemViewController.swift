@@ -24,7 +24,7 @@ class AddItemTableViewController: UITableViewController {
     var imagePicker: UIImagePickerController!
     
     var delegate: AddItemTableViewDelegate?
-    var itemToEdit: Event?
+    var itemToEdit: Event? 
     
     override func viewDidLoad() {
         super.viewDidLoad()

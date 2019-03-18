@@ -62,11 +62,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifier") as? ItemTableViewCell else {
             return UITableViewCell()
         }
-        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy hh:mm at"
         if (resultSearchController.isActive) {
             cell.lblTitle.text = filteredTListItem[indexPath.row].title
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd MMM yyyy"
+
             let selectedDate = dateFormatter.string(from: filteredTListItem[indexPath.row].date ?? Date())
             cell.lblDate.text = selectedDate
             if let dataImage = filteredTListItem[indexPath.row].image  {
@@ -79,8 +79,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
         } else {
             cell.lblTitle.text = DataModel.shared().list![indexPath.row].title
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd MMM yyyy"
             let selectedDate = dateFormatter.string(from: DataModel.shared().list![indexPath.row].date ?? Date())
             cell.lblDate.text = selectedDate
             if let dataImage = DataModel.shared().list![indexPath.row].image  {
@@ -126,6 +124,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        DataBase.init().deleteEvent(event: DataModel.shared().list![indexPath.row])
         DataModel.shared().list!.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
     }

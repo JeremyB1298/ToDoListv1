@@ -64,6 +64,32 @@ class DataBase {
         }
     }
     
+    public func deleteEvent(event: Event) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
+        request.predicate = NSPredicate(format: "id == \(event.id)")
+        request.returnsObjectsAsFaults = false
+        do {
+            guard let result = try managedContext.fetch(request) as? [Event] else {
+                return
+            }
+            for object in result {
+                managedContext.delete(object)
+            }
+            do {
+                try managedContext.save()
+            } catch {
+                print("error save update")
+            }
+            
+            
+        } catch {
+            
+            print("Failed")
+        }
+    }
+    
     public func loadData() -> [Event] {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return [] }
         let managedContext = appDelegate.persistentContainer.viewContext
