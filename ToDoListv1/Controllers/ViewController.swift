@@ -10,10 +10,17 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var listItem = [Item]()
-    var filteredTListItem = [Item]()
+    var filteredTListItem = [Event]()
     @IBOutlet weak var tableView: UITableView!
     var resultSearchController = UISearchController()
+    
+    static var documentDirectory: URL {
+        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    }
+    
+    static var dataFileUrl: URL {
+        return ViewController.documentDirectory.appendingPathComponent("list").appendingPathExtension("json")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,71 +45,63 @@ class ViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "addItemIdentifier", let vc = segue.destination as? AddItemTableViewController {
             vc.delegate = self
+        } else if segue.identifier == "editItemIdentifier", let vc = segue.destination as? AddItemTableViewController {
+            vc.delegate = self
+            guard let cell = sender as? UITableViewCell, let id = tableView.indexPath(for: cell)?.row else {
+                return
+            }
+            vc.itemToEdit = DataModel.shared().list![id]
         }
     }
-    
-    //MARK: - Actions
-    
-//    @IBAction func actnAdd(_ sender: Any) {
-//
-//        let alertController = UIAlertController(title: "ToDoListv1", message: "New item ?", preferredStyle: .alert)
-//        alertController.addTextField { (textField : UITextField!) -> Void in
-//            textField.placeholder = "Enter Item Name"
-//        }
-//
-//        let okAction = UIAlertAction(title: "ok", style: .default, handler: {(action) in
-//
-//            let textField = alertController.textFields!.first
-//
-//            guard let text = textField!.text, !text.isEmpty else {
-//                return
-//            }
-//
-//
-//        })
-//
-//        let cancelAction = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
-//
-//        alertController.addAction(okAction)
-//        alertController.addAction(cancelAction)
-//
-//        present(alertController, animated: true, completion: nil)
-//    }
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifier")!
-        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifier") as? ItemTableViewCell else {
+            return UITableViewCell()
+        }
         
         if (resultSearchController.isActive) {
-            cell.textLabel?.text = filteredTListItem[indexPath.row].title
+            cell.lblTitle.text = filteredTListItem[indexPath.row].title
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd MMM yyyy"
+            let selectedDate = dateFormatter.string(from: filteredTListItem[indexPath.row].date ?? Date())
+            cell.lblDate.text = selectedDate
+            if let dataImage = filteredTListItem[indexPath.row].image  {
+                cell.imageView?.image = UIImage(data: dataImage)
+            }
             if filteredTListItem[indexPath.row].checked == true {
-                cell.accessoryType = UITableViewCell.AccessoryType.checkmark
+                cell.lblCheckmark.isHidden = false
             } else {
-                cell.accessoryType = UITableViewCell.AccessoryType.none
+                cell.lblCheckmark.isHidden = true
             }
-            
-            return cell
-        }
-        else {
-            cell.textLabel?.text = listItem[indexPath.row].title
-            if listItem[indexPath.row].checked == true {
-                cell.accessoryType = UITableViewCell.AccessoryType.checkmark
+        } else {
+            cell.lblTitle.text = DataModel.shared().list![indexPath.row].title
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd MMM yyyy"
+            let selectedDate = dateFormatter.string(from: DataModel.shared().list![indexPath.row].date ?? Date())
+            cell.lblDate.text = selectedDate
+            if let dataImage = DataModel.shared().list![indexPath.row].image  {
+                cell.imageView?.image = UIImage(data: dataImage)
+            }
+            if DataModel.shared().list![indexPath.row].checked == true {
+                cell.lblCheckmark.isHidden = false
             } else {
-                cell.accessoryType = UITableViewCell.AccessoryType.none
+                cell.lblCheckmark.isHidden = true
             }
-            return cell
         }
+        
+        
+        return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if  (resultSearchController.isActive) {
             return filteredTListItem.count
         } else {
-            return listItem.count
+            return DataModel.shared().list!.count
         }
     }
     
@@ -110,22 +109,24 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let currentCell = tableView.cellForRow(at: indexPath)
+        guard let currentCell = tableView.cellForRow(at: indexPath) as? ItemTableViewCell else {
+            return
+        }
         
-        if listItem[indexPath.row].checked == true {
-            
-            currentCell?.accessoryType = UITableViewCell.AccessoryType.none
-            listItem[indexPath.row].checked = false
+        if DataModel.shared().list![indexPath.row].checked == true {
+            currentCell.lblCheckmark.isHidden = true
+            DataModel.shared().list![indexPath.row].checked = false
+            //DataBase().updateEvent(event: DataModel.shared().list![indexPath.row])
         } else {
-            
-            currentCell?.accessoryType = UITableViewCell.AccessoryType.checkmark
-            listItem[indexPath.row].checked = true
+            currentCell.lblCheckmark.isHidden = false
+            DataModel.shared().list![indexPath.row].checked = true
+            //DataBase().updateEvent(event: DataModel.shared().list![indexPath.row])
         }
         
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        listItem.remove(at: indexPath.row)
+        DataModel.shared().list!.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
     }
     
@@ -135,9 +136,9 @@ extension ViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         filteredTListItem.removeAll(keepingCapacity: false)
         if searchController.searchBar.text!.lowercased().isEmpty {
-            filteredTListItem =  listItem
+            filteredTListItem =  DataModel.shared().list!
         } else {
-            filteredTListItem =  listItem.filter { $0.title!.contains(searchController.searchBar.text!.lowercased()) }
+            filteredTListItem =  DataModel.shared().list!.filter { $0.title?.contains(searchController.searchBar.text!.lowercased()) ?? true }
         }
         self.tableView.reloadData()
     }
@@ -145,9 +146,24 @@ extension ViewController: UISearchResultsUpdating {
 }
 
 extension ViewController: AddItemTableViewDelegate {
-    func addItemFinish(controller: UITableViewController, item: Item) {
+    func addItemFinish(controller: UITableViewController) {
         controller.navigationController?.popViewController(animated: true)
-        self.listItem.append(item)
-        self.tableView.insertRows(at: [IndexPath(item: self.listItem.count-1, section: 0)], with: UITableView.RowAnimation.top)
+        //DataModel.shared().list = DataModel.shared().sortList(list: DataModel.shared().list!)
+        DataModel.shared().loadChecklist()
+        tableView.reloadData()
     }
+    
+    func editItemFinish(controller: UITableViewController) {
+        controller.navigationController?.popViewController(animated: true)
+        
+        DataModel.shared().list = DataModel.shared().sortList(list: DataModel.shared().list!)
+        tableView.reloadData()
+    }
+    
+//    func addItemFinish(controller: UITableViewController, item: Event) {
+//        controller.navigationController?.popViewController(animated: true)
+//        DataModel.shared().list!.append(item)
+//        DataModel.shared().list = DataModel.shared().sortList(list: DataModel.shared().list!)
+//        tableView.reloadData()
+//    }
 }

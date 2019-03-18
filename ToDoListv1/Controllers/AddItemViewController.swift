@@ -9,34 +9,81 @@
 import UIKit
 
 protocol AddItemTableViewDelegate {
-    func addItemFinish(controller: UITableViewController,item: Item)
+    func addItemFinish(controller: UITableViewController)
+    func editItemFinish(controller: UITableViewController)
 }
 
 
 class AddItemTableViewController: UITableViewController {
 
+    @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var txtField: UITextField!
     @IBOutlet weak var btnDone: UIBarButtonItem!
+    @IBOutlet weak var imageView: UIImageView!
+    
+    var imagePicker: UIImagePickerController!
     
     var delegate: AddItemTableViewDelegate?
+    var itemToEdit: Event?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        if itemToEdit != nil {
+            navigationController?.title = "Edit Item"
+            txtField.text = itemToEdit?.title
+            datePicker.date = (itemToEdit?.date)!
+            imageView.image = UIImage(data: (itemToEdit?.image)!)
+        } else {
+            navigationController?.title = "Add Item"
+        }
+        datePicker.datePickerMode = UIDatePicker.Mode.date
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        txtField.becomeFirstResponder()
-        //btnDone.isEnabled = false
+        //txtField.becomeFirstResponder()
+        if (txtField.text?.isEmpty)! {
+            btnDone.isEnabled = false
+        }
     }
 
     @IBAction func actnDone(_ sender: Any) {
-        guard let txt = txtField.text else {
-            return
+        
+        if itemToEdit != nil {
+            guard let txt = txtField.text else {
+                return
+            }
+            itemToEdit?.title = txt
+            itemToEdit?.date = datePicker.date
+            itemToEdit?.image = imageView.image?.pngData()
+            DataBase().updateEvent(event: itemToEdit!)
+            delegate?.editItemFinish(controller: self)
+        } else {
+            guard let txt = txtField.text else {
+                return
+            }
+            if let image = imageView.image?.pngData() {
+                DataBase().insertEvent(title: txt, date: datePicker.date, image: image)
+                delegate?.addItemFinish(controller: self)
+            } else {
+                DataBase().insertEvent(title: txt, date: datePicker.date)
+                delegate?.addItemFinish(controller: self)
+            }
+            
         }
-        delegate?.addItemFinish(controller: self, item: Item( txt))
+    }
+    @IBAction func actnImage(_ sender: Any) {
+        imagePicker =  UIImagePickerController()
+        imagePicker.delegate = self 
+        imagePicker.sourceType = .photoLibrary
+        
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        imagePicker.dismiss(animated: true, completion: nil)
+        imageView.image = info[.originalImage] as? UIImage
     }
     
 }
@@ -51,4 +98,7 @@ extension AddItemTableViewController: UITextFieldDelegate {
         }
         return true
     }
+}
+extension AddItemTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
 }
