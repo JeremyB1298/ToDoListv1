@@ -70,7 +70,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             let selectedDate = dateFormatter.string(from: filteredTListItem[indexPath.row].date ?? Date())
             cell.lblDate.text = selectedDate
             if let dataImage = filteredTListItem[indexPath.row].image  {
-                cell.imageView?.image = UIImage(data: dataImage)
+                cell.imageViewEvent?.image = UIImage(data: dataImage)
+            } else {
+                cell.imageViewEvent.image = nil
             }
             if filteredTListItem[indexPath.row].checked == true {
                 cell.lblCheckmark.isHidden = false
@@ -82,7 +84,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             let selectedDate = dateFormatter.string(from: DataModel.shared().list![indexPath.row].date ?? Date())
             cell.lblDate.text = selectedDate
             if let dataImage = DataModel.shared().list![indexPath.row].image  {
-                cell.imageView?.image = UIImage(data: dataImage)
+                cell.imageViewEvent?.image = UIImage(data: dataImage)
+            } else {
+                cell.imageViewEvent.image = nil
             }
             if DataModel.shared().list![indexPath.row].checked == true {
                 cell.lblCheckmark.isHidden = false
