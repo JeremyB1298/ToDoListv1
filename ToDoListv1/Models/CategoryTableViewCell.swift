@@ -9,5 +9,5 @@
 import UIKit
 
 class CategoryTableViewCell: UITableViewCell {
-
+    var checked: Bool = false
 }
