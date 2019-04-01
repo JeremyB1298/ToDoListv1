@@ -17,6 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         UserDefaults.standard.register(defaults: ["idEvent" : 0])
+        UserDefaults.standard.register(defaults: ["idCategory" : 1])
+        UserDefaults.standard.register(defaults: ["section" : 0])
+        UserDefaults.standard.register(defaults: ["row" : 0])
         return true
     }
     

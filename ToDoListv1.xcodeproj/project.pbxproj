@@ -20,6 +20,7 @@
 		08B252B02225B1CD007915B3 /* models.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 08B252AE2225B1CD007915B3 /* models.xcdatamodeld */; };
 		08B252B22225C1F9007915B3 /* DataBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B252B12225C1F9007915B3 /* DataBase.swift */; };
 		08CAE9072243C65900A6145D /* AllCategoriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CAE9062243C65900A6145D /* AllCategoriesTableViewController.swift */; };
+		08F4CCA82252119E004AE936 /* ItemCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F4CCA72252119E004AE936 /* ItemCategoryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		08B252AF2225B1CD007915B3 /* models.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = models.xcdatamodel; sourceTree = "<group>"; };
 		08B252B12225C1F9007915B3 /* DataBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBase.swift; sourceTree = "<group>"; };
 		08CAE9062243C65900A6145D /* AllCategoriesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCategoriesTableViewController.swift; sourceTree = "<group>"; };
+		08F4CCA72252119E004AE936 /* ItemCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCategoryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				08971A41221FEEFB006190D8 /* ViewController.swift */,
 				08971A5C22202DC9006190D8 /* AddItemViewController.swift */,
 				08CAE9062243C65900A6145D /* AllCategoriesTableViewController.swift */,
+				08F4CCA72252119E004AE936 /* ItemCategoryViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 				08B252B22225C1F9007915B3 /* DataBase.swift in Sources */,
 				088C71A62220508A0063A1AE /* DataModel.swift in Sources */,
 				08A1BD172242585E0041ED54 /* CategoryTableViewCell.swift in Sources */,
+				08F4CCA82252119E004AE936 /* ItemCategoryViewController.swift in Sources */,
 				08CAE9072243C65900A6145D /* AllCategoriesTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

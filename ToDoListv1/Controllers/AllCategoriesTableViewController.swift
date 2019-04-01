@@ -14,21 +14,50 @@ class AllCategoriesTableViewController: UITableViewController {
     
     var indexpathSelected : IndexPath?
     
+    var tabCategories = DataBase.shared().loadCategory()
+    
+   
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoriesCellIdentifier")
+    }
+    
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
+        indexpathSelected = IndexPath(row: UserDefaults.standard.object(forKey: "row") as! Int, section: UserDefaults.standard.object(forKey: "section") as! Int)
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath == IndexPath(row: 0, section: 0) {
-            return super.tableView(tableView, cellForRowAt: indexPath)
+
+        if indexPath.row == 0, indexPath.section == 0 {
+            let cell = UITableViewCell()
+            cell.textLabel?.text = "All"
+            cell.accessoryType = indexpathSelected == IndexPath(row: 0, section: 0) ? .checkmark : .none
+            return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "categoriesCellIdentifier", for: indexPath)
-            cell.textLabel?.text = categories[indexPath.row]
+            cell.textLabel?.text = tabCategories[indexPath.row].name
+            cell.accessoryType = tabCategories[indexPath.row].checked ? .checkmark : .none
+            if(tabCategories[indexPath.row].checked){
+                indexpathSelected = indexPath
+            }
             return cell
+        }
+        
+    }
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        if indexPath.row == 0 , indexPath.section == 0 {
+            return .none
+        }
+        else {
+            return .delete
         }
     }
     
@@ -37,7 +66,7 @@ class AllCategoriesTableViewController: UITableViewController {
         case 0:
             return 1
         default:
-            return categories.count
+            return tabCategories.count
         }
     }
     
@@ -65,22 +94,35 @@ class AllCategoriesTableViewController: UITableViewController {
 
             let oldCell = tableView.cellForRow(at: indexpathSelected!)
             oldCell?.accessoryType = UITableViewCell.AccessoryType.none
-            
+            tabCategories[indexpathSelected!.row].checked = false
+            if indexPath.section != 0 {
+                 DataBase.shared().updateCategory(category: tabCategories[indexpathSelected!.row])
+            }
+           
         }
         
         let cell = tableView.cellForRow(at: indexPath)
         cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
         
+        
+        if indexPath.section != 0 {
+            tabCategories[indexPath.row].checked = true
+             DataBase.shared().updateCategory(category: tabCategories[indexPath.row])
+        }
+       
         indexpathSelected = indexPath
+        UserDefaults.standard.set(indexpathSelected?.row, forKey: "row")
+        UserDefaults.standard.set(indexpathSelected?.section, forKey: "section")
         
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if indexPath != IndexPath(row: 0, section: 0) {
-            categories.remove(at: indexPath.row)
+        
+            DataBase.shared().deleteCategory(category: tabCategories[indexPath.row])
+            tabCategories.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.bottom)
-                
-        }
+        
+        
     }
     
     @IBAction func addCategorie(_ sender: Any) {
@@ -89,7 +131,11 @@ class AllCategoriesTableViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Done", style: UIAlertAction.Style.default, handler: { Void in
             let firstTextField = alert.textFields?.first
-            self.categories.append((firstTextField?.text)!)
+            guard let name = firstTextField?.text else {
+                return
+            }
+            DataBase.shared().insertCategory(name: name, checked: false)
+            self.tabCategories  = DataBase.shared().loadCategory()
             self.tableView.reloadData()
         }))
         alert.addTextField(configurationHandler: { (textField) in

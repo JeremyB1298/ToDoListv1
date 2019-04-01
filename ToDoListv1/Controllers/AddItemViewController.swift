@@ -50,6 +50,15 @@ class AddItemTableViewController: UITableViewController {
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped)))
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "categoryChoice" , let navigation = segue.destination as? UINavigationController {
+            let viewController = navigation.topViewController as? ItemCategoryViewController
+            viewController?.delegate = self
+        }
+    }
+    
+    
+    
     @objc private func imageTapped(_ recognizer: UITapGestureRecognizer) {
         imagePicker =  UIImagePickerController()
         imagePicker.delegate = self
@@ -201,4 +210,26 @@ extension AddItemTableViewController: UITextFieldDelegate {
 }
 extension AddItemTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+}
+
+extension AddItemTableViewController : ItemCategoryDelegate{
+    func choosenCategory(view: ItemCategoryViewController, category: Category) {
+        view.dismiss(animated: true, completion: nil)
+        if itemToEdit != nil {
+            print(category.name)
+        }
+        else{
+            print(category.name)//itemToEdit?.category = category
+        }
+        
+        
+
+        
+        
+        
+        
+        fqrgqhgdfbqjnynk,u,ùùùfffgfgfghdfghgfdhfgdhdfghdfgjcghjcghkjhhkghk651456435435351351654654ghgggggggùùùùùùùùùù
+    }
+    
+    
 }
