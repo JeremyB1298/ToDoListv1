@@ -160,6 +160,12 @@ class DataBase {
     
     public func deleteCategory(category: Category) {
         
+        if let events = category.events?.allObjects as? [Event] {
+            for event in events {
+                deleteEvent(event: event)
+            }
+        }
+        
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Category")
         request.predicate = NSPredicate(format: "id == \(category.id)")
         request.returnsObjectsAsFaults = false
@@ -230,4 +236,13 @@ class DataBase {
         }
         return []
     }
+    
+    public func deselctCategory() {
+        let tab = loadCategory()
+        for category in tab {
+            category.checked = false
+            updateCategory(category: category)
+        }
+    }
+    
 }

@@ -126,6 +126,7 @@ class AllCategoriesTableViewController: UITableViewController {
         
         DataModel.shared().loadChecklist()
         delegate?.choosedCategory(view: self)
+        self.dismiss(animated: true, completion: nil)
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -133,8 +134,6 @@ class AllCategoriesTableViewController: UITableViewController {
             DataBase.shared().deleteCategory(category: tabCategories[indexPath.row])
             tabCategories.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.bottom)
-        
-        
     }
     
     @IBAction func addCategorie(_ sender: Any) {
@@ -155,5 +154,8 @@ class AllCategoriesTableViewController: UITableViewController {
         })
         self.present(alert, animated: true, completion: nil)
         
+    }
+    @IBAction func cancel(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
     }
 }

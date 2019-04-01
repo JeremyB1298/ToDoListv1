@@ -196,7 +196,6 @@ extension ViewController: AddItemTableViewDelegate {
 
 extension ViewController: AllCategoriesDelegate {
     func choosedCategory(view: AllCategoriesTableViewController) {
-        view.dismiss(animated: true, completion: nil)
         tableView.reloadData()
     }
 }

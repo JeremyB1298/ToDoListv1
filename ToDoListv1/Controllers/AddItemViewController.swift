@@ -23,7 +23,7 @@ class AddItemTableViewController: UITableViewController {
     @IBOutlet var datePickerCell: UITableViewCell!
     @IBOutlet weak var lblDateCreate: UILabel!
     @IBOutlet weak var txtFieldDesc: UITextField!
-    @IBOutlet weak var lblCategoyName: UILabel!
+    @IBOutlet weak var lblCategoryName: UILabel!
     
     var imagePicker: UIImagePickerController!
     var isDatePickerVisible = false
@@ -37,7 +37,12 @@ class AddItemTableViewController: UITableViewController {
         if itemToEdit != nil {
             navigationController?.title = "Edit Item"
             category = itemToEdit?.category
-            lblCategoyName.text = category?.name
+            if category != nil {
+                lblCategoryName.text = category?.name
+            } else {
+                lblCategoryName.text = "All"
+            }
+            lblCategoryName.text = category?.name
             txtField.text = itemToEdit?.title
             datePicker.date = (itemToEdit?.date)!
             if itemToEdit?.image != nil {
@@ -48,6 +53,7 @@ class AddItemTableViewController: UITableViewController {
         } else {
             navigationController?.title = "Add Item"
             lblDateCreate.text = initLblDate(date: Date())
+            lblCategoryName.text = "All"
         }
         datePicker.datePickerMode = UIDatePicker.Mode.date
         imageView.isUserInteractionEnabled = true
@@ -219,7 +225,7 @@ extension AddItemTableViewController : ItemCategoryDelegate{
     func choosenCategory(view: ItemCategoryViewController, category: Category) {
         view.dismiss(animated: true, completion: nil)
         self.category = category
-        lblCategoyName.text = category.name
+        lblCategoryName.text = category.name
     }
     
     
