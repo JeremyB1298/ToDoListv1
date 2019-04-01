@@ -12,7 +12,7 @@ import UIKit
 class DataModel {
     
     var list: [Event]?
-    
+    var category : Category?
     private static var sharedNetworkManager: DataModel = {
         let dataModel = DataModel()
         
@@ -46,7 +46,7 @@ class DataModel {
     }
     
     func loadChecklist() {
-        list = DataBase.shared().loadEvent()
+        list = DataBase.shared().loadEvent(category)
     }
     
     func sortList(list: [Event]) -> [Event] {

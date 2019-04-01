@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     var filteredTListItem = [Event]()
     @IBOutlet weak var tableView: UITableView!
     var resultSearchController = UISearchController()
-    
+    var category : Category?
     static var documentDirectory: URL {
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     }
@@ -21,12 +21,15 @@ class ViewController: UIViewController {
     static var dataFileUrl: URL {
         return ViewController.documentDirectory.appendingPathComponent("list").appendingPathExtension("json")
     }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         initSearch()
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        DataModel.shared().loadChecklist()
+        tableView.reloadData()
+    }
     func initSearch() {
         
         resultSearchController = ({
@@ -51,8 +54,8 @@ class ViewController: UIViewController {
                 return
             }
             vc.itemToEdit = DataModel.shared().list![id]
-        } else if segue.identifier == "listCategories" {
-            print("cacao")
+        } else if segue.identifier == "listCategories", let vc = segue.destination as? AllCategoriesTableViewController {
+            vc.delegate = self
         }
 
     }
@@ -189,4 +192,11 @@ extension ViewController: AddItemTableViewDelegate {
 //        DataModel.shared().list = DataModel.shared().sortList(list: DataModel.shared().list!)
 //        tableView.reloadData()
 //    }
+}
+
+extension ViewController: AllCategoriesDelegate {
+    func choosedCategory(view: AllCategoriesTableViewController) {
+        view.dismiss(animated: true, completion: nil)
+        tableView.reloadData()
+    }
 }

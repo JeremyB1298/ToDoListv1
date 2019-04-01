@@ -23,17 +23,21 @@ class AddItemTableViewController: UITableViewController {
     @IBOutlet var datePickerCell: UITableViewCell!
     @IBOutlet weak var lblDateCreate: UILabel!
     @IBOutlet weak var txtFieldDesc: UITextField!
+    @IBOutlet weak var lblCategoyName: UILabel!
     
     var imagePicker: UIImagePickerController!
     var isDatePickerVisible = false
     var delegate: AddItemTableViewDelegate?
-    var itemToEdit: Event? 
+    var itemToEdit: Event?
+    var category : Category?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         txtField.delegate = self
         if itemToEdit != nil {
             navigationController?.title = "Edit Item"
+            category = itemToEdit?.category
+            lblCategoyName.text = category?.name
             txtField.text = itemToEdit?.title
             datePicker.date = (itemToEdit?.date)!
             if itemToEdit?.image != nil {
@@ -108,11 +112,12 @@ class AddItemTableViewController: UITableViewController {
             itemToEdit?.title = txt
             itemToEdit?.date = datePicker.date
             itemToEdit?.image = imageView.image?.pngData()
+            
             if let desc = txtFieldDesc.text {
                 itemToEdit?.desc = desc
             }
-            if let desc = txtFieldDesc.text {
-                itemToEdit?.desc = desc
+            if let cat = category {
+                itemToEdit?.category = cat
             }
             DataBase.shared().updateEvent(event: itemToEdit!)
             delegate?.editItemFinish(controller: self)
@@ -121,19 +126,14 @@ class AddItemTableViewController: UITableViewController {
                 return
             }
             if let image = imageView.image?.pngData() {
-                DataBase.shared().insertEvent(title: txt, date: datePicker.date, image: image, desc: txtFieldDesc.text ?? "")
+                DataBase.shared().insertEvent(title: txt, date: datePicker.date, image: image, desc: txtFieldDesc.text ?? "", category: category)
                 delegate?.addItemFinish(controller: self)
             } else {
-                DataBase.shared().insertEvent(title: txt, date: datePicker.date, desc: txtFieldDesc.text ?? "")
+                DataBase.shared().insertEvent(title: txt, date: datePicker.date, desc: txtFieldDesc.text ?? "", category: category)
                 delegate?.addItemFinish(controller: self)
             }
             
         }
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        imagePicker.dismiss(animated: true, completion: nil)
-        imageView.image = info[.originalImage] as? UIImage
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -209,26 +209,17 @@ extension AddItemTableViewController: UITextFieldDelegate {
     }
 }
 extension AddItemTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        imagePicker.dismiss(animated: true, completion: nil)
+        imageView.image = info[.originalImage] as? UIImage
+    }
 }
 
 extension AddItemTableViewController : ItemCategoryDelegate{
     func choosenCategory(view: ItemCategoryViewController, category: Category) {
         view.dismiss(animated: true, completion: nil)
-        if itemToEdit != nil {
-            print(category.name)
-        }
-        else{
-            print(category.name)//itemToEdit?.category = category
-        }
-        
-        
-
-        
-        
-        
-        
-        fqrgqhgdfbqjnynk,u,ùùùfffgfgfghdfghgfdhfgdhdfghdfgjcghjcghkjhhkghk651456435435351351654654ghgggggggùùùùùùùùùù
+        self.category = category
+        lblCategoyName.text = category.name
     }
     
     

@@ -33,7 +33,7 @@ class DataBase {
         managedContext = appDelegate.persistentContainer.viewContext
     }
     
-    public func insertEvent(title: String, date: Date, image: Data? = nil, desc: String? = "") {
+    public func insertEvent(title: String, date: Date, image: Data? = nil, desc: String? = "", category: Category? = nil) {
         
         //let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         //"\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! }) + "\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! })
@@ -44,6 +44,9 @@ class DataBase {
         newItem.checked = false
         if image != nil {
             newItem.image = image
+        }
+        if category != nil {
+            newItem.category = category
         }
         newItem.desc = desc
 
@@ -180,11 +183,15 @@ class DataBase {
         }
     }
     
-    public func loadEvent() -> [Event] {
+    public func loadEvent(_ predicate : Category? = nil) -> [Event] {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return [] }
         let managedContext = appDelegate.persistentContainer.viewContext
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
-        //request.predicate = NSPredicate(format: "age = %@", "12")
+        
+        if let category = predicate {
+            request.predicate = NSPredicate(format: "category.name == %@", category.name!)
+        }
+        
         request.returnsObjectsAsFaults = false
         
         do {

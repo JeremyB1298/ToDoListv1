@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol AllCategoriesDelegate {
+    func choosedCategory(view: AllCategoriesTableViewController)
+}
+
 class AllCategoriesTableViewController: UITableViewController {
 
     var categories = ["1","2","3","4"]
@@ -16,8 +20,7 @@ class AllCategoriesTableViewController: UITableViewController {
     
     var tabCategories = DataBase.shared().loadCategory()
     
-   
-    
+    var delegate : AllCategoriesDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -114,6 +117,15 @@ class AllCategoriesTableViewController: UITableViewController {
         UserDefaults.standard.set(indexpathSelected?.row, forKey: "row")
         UserDefaults.standard.set(indexpathSelected?.section, forKey: "section")
         
+        if indexPath.row == 0 , indexPath.section == 0{
+            DataModel.shared().category  = nil
+        }
+        else{
+            DataModel.shared().category  = tabCategories[indexPath.row]
+        }
+        
+        DataModel.shared().loadChecklist()
+        delegate?.choosedCategory(view: self)
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
