@@ -42,7 +42,6 @@ class AddItemTableViewController: UITableViewController {
             } else {
                 lblCategoryName.text = "All"
             }
-            lblCategoryName.text = category?.name
             txtField.text = itemToEdit?.title
             datePicker.date = (itemToEdit?.date)!
             if itemToEdit?.image != nil {
