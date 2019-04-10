@@ -103,9 +103,8 @@ class AddItemTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //txtField.becomeFirstResponder()
-        if (txtField.text?.isEmpty)! {
-            btnDone.isEnabled = false
-        }
+        txtField.becomeFirstResponder()
+        btnDone.isEnabled = txtField.text?.count != 0 ? true : false
     }
 
     @IBAction func actnDone(_ sender: Any) {
@@ -199,19 +198,14 @@ class AddItemTableViewController: UITableViewController {
 }
 extension AddItemTableViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if textField == txtField {
-            let nsString = txtField.text as NSString?
-            let newString = nsString?.replacingCharacters(in: range, with: string)
-            if newString?.isEmpty ?? true {
-                btnDone.isEnabled = false
-            } else {
-                btnDone.isEnabled = true
-            }
-            return true
-        } else {
-            return true
+        let nsString = txtField.text as NSString?
+        guard var newString = nsString?.replacingCharacters(in: range, with: string) else {
+            return false
         }
-        
+        newString = newString.trimmingCharacters(in: .whitespaces)
+        newString = String(newString.filter { !" \n\t\r".contains($0) })
+        btnDone.isEnabled = !newString.isEmpty
+        return true
     }
 }
 extension AddItemTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
