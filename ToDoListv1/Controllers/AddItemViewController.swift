@@ -22,6 +22,7 @@ class AddItemTableViewController: UITableViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet var datePickerCell: UITableViewCell!
     @IBOutlet weak var lblDateCreate: UILabel!
+    @IBOutlet weak var lblDateModification: UILabel!
     @IBOutlet weak var txtFieldDesc: UITextField!
     @IBOutlet weak var lblCategoryName: UILabel!
     
@@ -49,12 +50,13 @@ class AddItemTableViewController: UITableViewController {
             }
             txtFieldDesc.text = itemToEdit?.desc
             lblDateCreate.text = initLblDate(date: (itemToEdit?.date)!)
+            lblDateModification.text = initLblDate(date: itemToEdit?.dateChange ?? Date())
         } else {
             navigationController?.title = "Add Item"
             lblDateCreate.text = initLblDate(date: Date())
             lblCategoryName.text = "All"
+            lblDateModification.text = initLblDate(date: Date())
         }
-        datePicker.datePickerMode = UIDatePicker.Mode.date
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped)))
     }

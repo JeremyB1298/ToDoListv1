@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Dib-Lt-mFs">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Dib-Lt-mFs">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -323,6 +323,7 @@
                         <outlet property="imageView" destination="ItG-Tw-mx9" id="W1S-73-0kR"/>
                         <outlet property="lblCategoryName" destination="paJ-rY-oa9" id="Rms-Op-3FV"/>
                         <outlet property="lblDateCreate" destination="fJA-cZ-J4l" id="onf-R2-ftL"/>
+                        <outlet property="lblDateModification" destination="ddO-uk-4nm" id="ye4-QC-YVe"/>
                         <outlet property="txtField" destination="jYd-Vl-1Ar" id="sBR-ve-6Gk"/>
                         <outlet property="txtFieldDesc" destination="Y5F-El-btz" id="lqj-YX-d8v"/>
                     </connections>

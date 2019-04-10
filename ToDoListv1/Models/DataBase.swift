@@ -41,6 +41,7 @@ class DataBase {
         newItem.id = UserDefaults.standard.object(forKey: "idEvent") as! Int64
         newItem.title = title
         newItem.date = date
+        newItem.dateChange = Date()
         newItem.checked = false
         if image != nil {
             newItem.image = image
@@ -72,7 +73,7 @@ class DataBase {
             let eventToUpdate = result[0]
             eventToUpdate.title = event.title
             eventToUpdate.date = event.date
-            
+            eventToUpdate.dateChange = Date()
             do {
                 try managedContext!.save()
             } catch {
