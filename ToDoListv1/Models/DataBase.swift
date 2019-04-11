@@ -201,7 +201,7 @@ class DataBase {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
         
         if let category = predicate {
-            request.predicate = NSPredicate(format: "category.name == %@", category.name!)
+            request.predicate = NSPredicate(format: "category.id == \(category.id)")
         }
         
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
