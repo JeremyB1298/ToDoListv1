@@ -190,7 +190,7 @@ class DataBase {
         }
     }
     
-    public func loadEvent(_ predicate : Category? = nil) -> [Event] {
+    public func loadEvent(_ predicate : Category? = nil, _ sort : String?) -> [Event] {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return [] }
         let managedContext = appDelegate.persistentContainer.viewContext
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
@@ -198,6 +198,8 @@ class DataBase {
         if let category = predicate {
             request.predicate = NSPredicate(format: "category.name == %@", category.name!)
         }
+        
+        request.sortDescriptors = [NSSortDescriptor(key: sort, ascending: true)]
         
         request.returnsObjectsAsFaults = false
         

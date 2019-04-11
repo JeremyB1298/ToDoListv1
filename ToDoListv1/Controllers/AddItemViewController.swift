@@ -36,7 +36,7 @@ class AddItemTableViewController: UITableViewController {
         super.viewDidLoad()
         txtField.delegate = self
         if itemToEdit != nil {
-            navigationController?.title = "Edit Item"
+            navigationItem.title = "Edit Item"
             category = itemToEdit?.category
             if category != nil {
                 lblCategoryName.text = category?.name
@@ -52,7 +52,7 @@ class AddItemTableViewController: UITableViewController {
             lblDateCreate.text = initLblDate(date: (itemToEdit?.date)!)
             lblDateModification.text = initLblDate(date: itemToEdit?.dateChange ?? Date())
         } else {
-            navigationController?.title = "Add Item"
+            navigationItem.title = "Add Item"
             lblDateCreate.text = initLblDate(date: Date())
             lblCategoryName.text = "All"
             lblDateModification.text = initLblDate(date: Date())

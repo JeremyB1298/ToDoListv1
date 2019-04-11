@@ -117,11 +117,18 @@
                                 </segue>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="7Zk-CU-u61">
-                            <connections>
-                                <segue destination="nt5-qk-M37" kind="show" identifier="addItemIdentifier" id="Yke-c4-jIn"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="7Zk-CU-u61">
+                                <connections>
+                                    <segue destination="nt5-qk-M37" kind="show" identifier="addItemIdentifier" id="Yke-c4-jIn"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Sort" id="doY-Ge-z4Y">
+                                <connections>
+                                    <action selector="sort:" destination="BYZ-38-t0r" id="0Vd-2U-eXW"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="xUh-zl-y5I" id="c22-Ei-WiY"/>
@@ -131,7 +138,7 @@
             </objects>
             <point key="canvasLocation" x="976.79999999999995" y="25.637181409295355"/>
         </scene>
-        <!--Add Item-->
+        <!--Add Item Table View Controller-->
         <scene sceneID="4Ig-0e-xwj">
             <objects>
                 <tableViewController id="nt5-qk-M37" customClass="AddItemTableViewController" customModule="ToDoListv1" customModuleProvider="target" sceneMemberID="viewController">
@@ -309,7 +316,7 @@
                             <outlet property="delegate" destination="nt5-qk-M37" id="Lyw-6g-fZP"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Add Item" id="Yha-79-dbL">
+                    <navigationItem key="navigationItem" id="Yha-79-dbL">
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="1ec-JW-Ryw">
                             <connections>
                                 <action selector="actnDone:" destination="nt5-qk-M37" id="OlG-qs-d0h"/>
