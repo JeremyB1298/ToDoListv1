@@ -33,16 +33,17 @@ class DataBase {
         managedContext = appDelegate.persistentContainer.viewContext
     }
     
-    public func insertEvent(title: String, date: Date, image: Data? = nil, desc: String? = "", category: Category? = nil) {
+    public func insertEvent(title: String, date: Date, image: Data? = nil, desc: String? = "", category: Category? = nil, _ alarm: Bool) {
         
         //let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         //"\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! }) + "\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! })
         let newItem = NSEntityDescription.insertNewObject(forEntityName: "Event", into: managedContext!) as! Event
         newItem.id = UserDefaults.standard.object(forKey: "idEvent") as! Int64
         newItem.title = title
-        newItem.date = date
+        newItem.date = Date()
         newItem.dateChange = Date()
         newItem.checked = false
+        newItem.shouldRemind = alarm
         if image != nil {
             newItem.image = image
         }
@@ -50,7 +51,8 @@ class DataBase {
             newItem.category = category
         }
         newItem.desc = desc
-
+        newItem.dueDate = date
+        alarm ? newItem.scheduleNotification() : newItem.deleteNotification()
         
         do {
             try managedContext!.save()
@@ -72,8 +74,11 @@ class DataBase {
             }
             let eventToUpdate = result[0]
             eventToUpdate.title = event.title
-            eventToUpdate.date = event.date
+            eventToUpdate.dueDate = event.dueDate
             eventToUpdate.dateChange = Date()
+            eventToUpdate.shouldRemind = event.shouldRemind
+            
+            eventToUpdate.shouldRemind ? eventToUpdate.scheduleNotification() : eventToUpdate.deleteNotification()
             do {
                 try managedContext!.save()
             } catch {
