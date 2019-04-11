@@ -48,7 +48,7 @@ class DataModel {
     }
     
     func loadChecklist() {
-        list = DataBase.shared().loadEvent(category,sort)
+        list = DataBase.shared().loadEvent(category)
     }
     
     func sortList(list: [Event]) -> [Event] {

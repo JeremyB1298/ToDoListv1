@@ -118,25 +118,6 @@ class ViewController: UIViewController {
 
     }
     
-    //MARK : - Actions
-    
-    @IBAction func sort(_ sender: UIBarButtonItem) {
-        switch DataModel.shared().sort {
-        case "title":
-            DataModel.shared().sort = "date"
-            
-        case "date":
-            DataModel.shared().sort = "title"
-
-        default: break
-            
-        }
-        DataModel.shared().loadChecklist()
-        initSection()
-        tableView.reloadData()
-       
-    }
-    
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
