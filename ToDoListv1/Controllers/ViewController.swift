@@ -14,7 +14,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var resultSearchController = UISearchController()
     var category : Category?
-    
+    var sectionName = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
+    let collation = UILocalizedIndexedCollation.current()
+    var contactsWithSections = [[Event]]()
+    var sectionTitles = [String]()
     static var documentDirectory: URL {
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     }
@@ -25,7 +28,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initSearch()
+        initSection()
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         DataModel.shared().loadChecklist()
@@ -33,6 +38,18 @@ class ViewController: UIViewController {
     }
     
     //MARK : Personnal Functions
+    
+    func initSection() {
+        if resultSearchController.isActive {
+            let (arrayContacts, arrayTitles) = collation.partitionObjects(array: filteredTListItem, collationStringSelector: #selector(getter: Event.title))
+            contactsWithSections = arrayContacts as! [[Event]]
+            sectionTitles = arrayTitles
+        } else {
+            let (arrayContacts, arrayTitles) = collation.partitionObjects(array: DataModel.shared().list!, collationStringSelector: #selector(getter: Event.title))
+            contactsWithSections = arrayContacts as! [[Event]]
+            sectionTitles = arrayTitles
+        }
+    }
     
     func initSearch() {
         
@@ -46,40 +63,41 @@ class ViewController: UIViewController {
             
             return controller
         })()
-        
     }
     
     func initCellSearchActive(cell: ItemTableViewCell, indexPath: IndexPath ){
+        let event = contactsWithSections[indexPath.section][indexPath.row]
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy hh:mm at"
         
-        cell.lblTitle.text = filteredTListItem[indexPath.row].title
+        cell.lblTitle.text = event.title
         
-        let selectedDate = dateFormatter.string(from: filteredTListItem[indexPath.row].date ?? Date())
+        let selectedDate = dateFormatter.string(from: event.date ?? Date())
         cell.lblDate.text = selectedDate
-        if let dataImage = filteredTListItem[indexPath.row].image  {
+        if let dataImage = event.image  {
             cell.imageViewEvent?.image = UIImage(data: dataImage)
         } else {
             cell.imageViewEvent.image = nil
         }
         
-        cell.lblCheckmark.isHidden = filteredTListItem[indexPath.row].checked ? false : true
+        cell.lblCheckmark.isHidden = event.checked ? false : true
         
     }
     
     func initCell(cell: ItemTableViewCell, indexPath: IndexPath ) {
+        let event = contactsWithSections[indexPath.section][indexPath.row]
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd, yyyy hh:mm at"
         
-        cell.lblTitle.text = DataModel.shared().list![indexPath.row].title
-        let selectedDate = dateFormatter.string(from: DataModel.shared().list![indexPath.row].date ?? Date())
+        cell.lblTitle.text = event.title
+        let selectedDate = dateFormatter.string(from: event.date ?? Date())
         cell.lblDate.text = selectedDate
-        if let dataImage = DataModel.shared().list![indexPath.row].image  {
+        if let dataImage = event.image  {
             cell.imageViewEvent?.image = UIImage(data: dataImage)
         } else {
             cell.imageViewEvent.image = nil
         }
-        cell.lblCheckmark.isHidden = DataModel.shared().list![indexPath.row].checked ? false : true
+        cell.lblCheckmark.isHidden = event.checked ? false : true
     }
     
     //MARK : Prepare
@@ -89,20 +107,36 @@ class ViewController: UIViewController {
             vc.delegate = self
         } else if segue.identifier == "editItemIdentifier", let vc = segue.destination as? AddItemTableViewController {
             vc.delegate = self
-            guard let cell = sender as? UITableViewCell, let id = tableView.indexPath(for: cell)?.row else {
+            guard let cell = sender as? UITableViewCell, let row = tableView.indexPath(for: cell)?.row,
+            let section = tableView.indexPath(for: cell)?.section else {
                 return
             }
-            vc.itemToEdit = DataModel.shared().list![id]
-        } else if segue.identifier == "listCategories", let vc = segue.destination as? AllCategoriesTableViewController {
+            vc.itemToEdit = contactsWithSections[section][row]
+        } else if segue.identifier == "listCategories", let nav = segue.destination as? UINavigationController, let vc = nav.viewControllers.first as? AllCategoriesTableViewController  {
             vc.delegate = self
         }
 
     }
+    
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     //MARK : - Table view DataSource
+        func numberOfSections(in tableView: UITableView) -> Int {
+            return sectionTitles.count
+        }
+
+        func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+            return sectionTitles[section]
+        }
+        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            return 44
+        }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            return contactsWithSections[section].count
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -121,14 +155,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if  (resultSearchController.isActive) {
-            return filteredTListItem.count
-        } else {
-            return DataModel.shared().list!.count
-        }
-    }
+
     
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -175,9 +202,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 extension ViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         filteredTListItem.removeAll(keepingCapacity: false)
-        
         filteredTListItem = searchController.searchBar.text!.lowercased().isEmpty ? DataModel.shared().list! : DataModel.shared().list!.filter { $0.title?.contains(searchController.searchBar.text!.lowercased()) ?? true }
-        
+        initSection()
         self.tableView.reloadData()
     }
     
@@ -189,6 +215,7 @@ extension ViewController: AddItemTableViewDelegate {
     func addItemFinish(controller: UITableViewController) {
         controller.navigationController?.popViewController(animated: true)
         DataModel.shared().loadChecklist()
+        initSection()
         tableView.reloadData()
     }
     
@@ -196,6 +223,7 @@ extension ViewController: AddItemTableViewDelegate {
         controller.navigationController?.popViewController(animated: true)
         
         DataModel.shared().list = DataModel.shared().sortList(list: DataModel.shared().list!)
+        initSection()
         tableView.reloadData()
     }
 
@@ -205,6 +233,32 @@ extension ViewController: AddItemTableViewDelegate {
 
 extension ViewController: AllCategoriesDelegate {
     func choosedCategory(view: AllCategoriesTableViewController) {
+        initSection()
         tableView.reloadData()
+    }
+}
+extension UILocalizedIndexedCollation {
+
+    //func for partition array in sections
+    func partitionObjects(array:[AnyObject], collationStringSelector:Selector) -> ([AnyObject], [String]) {
+        var unsortedSections = [[AnyObject]]()
+        //1. Create a array to hold the data for each section
+        for _ in self.sectionTitles {
+            unsortedSections.append([]) //appending an empty array
+        }
+        //2. Put each objects into a section
+        for item in array {
+            let index:Int = self.section(for: item, collationStringSelector:collationStringSelector)
+            unsortedSections[index].append(item)
+        }
+        //3. sorting the array of each sections
+        var sectionTitles = [String]()
+        var sections = [AnyObject]()
+        for index in 0 ..< unsortedSections.count { if unsortedSections[index].count > 0 {
+            sectionTitles.append(self.sectionTitles[index])
+            sections.append(self.sortedArray(from: unsortedSections[index], collationStringSelector: collationStringSelector) as AnyObject)
+            }
+        }
+        return (sections, sectionTitles)
     }
 }

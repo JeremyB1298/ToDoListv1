@@ -13,6 +13,7 @@ class DataModel {
     
     var list: [Event]?
     var category : Category?
+    var sort: String?
     private static var sharedNetworkManager: DataModel = {
         let dataModel = DataModel()
         
@@ -20,6 +21,7 @@ class DataModel {
     }()
     
     private init() {
+        sort = "title"
         loadChecklist()
         NotificationCenter.default.addObserver(
             self,

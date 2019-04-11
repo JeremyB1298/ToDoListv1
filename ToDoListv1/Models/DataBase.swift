@@ -199,6 +199,8 @@ class DataBase {
             request.predicate = NSPredicate(format: "category.name == %@", category.name!)
         }
         
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
         request.returnsObjectsAsFaults = false
         
         do {
