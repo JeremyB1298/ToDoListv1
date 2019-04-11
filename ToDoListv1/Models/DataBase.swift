@@ -33,20 +33,26 @@ class DataBase {
         managedContext = appDelegate.persistentContainer.viewContext
     }
     
-    public func insertEvent(title: String, date: Date, image: Data? = nil, desc: String? = "") {
+    public func insertEvent(title: String, date: Date, image: Data? = nil, desc: String? = "", category: Category? = nil, _ alarm: Bool) {
         
         //let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         //"\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! }) + "\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! })
         let newItem = NSEntityDescription.insertNewObject(forEntityName: "Event", into: managedContext!) as! Event
         newItem.id = UserDefaults.standard.object(forKey: "idEvent") as! Int64
         newItem.title = title
-        newItem.date = date
+        newItem.date = Date()
+        newItem.dateChange = Date()
         newItem.checked = false
+        newItem.shouldRemind = alarm
         if image != nil {
             newItem.image = image
         }
+        if category != nil {
+            newItem.category = category
+        }
         newItem.desc = desc
-
+        newItem.dueDate = date
+        alarm ? newItem.scheduleNotification() : newItem.deleteNotification()
         
         do {
             try managedContext!.save()
@@ -68,8 +74,11 @@ class DataBase {
             }
             let eventToUpdate = result[0]
             eventToUpdate.title = event.title
-            eventToUpdate.date = event.date
+            eventToUpdate.dueDate = event.dueDate
+            eventToUpdate.dateChange = Date()
+            eventToUpdate.shouldRemind = event.shouldRemind
             
+            eventToUpdate.shouldRemind ? eventToUpdate.scheduleNotification() : eventToUpdate.deleteNotification()
             do {
                 try managedContext!.save()
             } catch {
@@ -108,11 +117,95 @@ class DataBase {
         }
     }
     
-    public func loadData() -> [Event] {
+    //public func insertCategoryAll()
+    
+    public func insertCategory(name: String, checked: Bool) {
+        
+        //let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        //"\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! }) + "\(Int.random(in: 0 ... 9999))" + String((0...10).map{ _ in letters.randomElement()! })
+        let newItem = NSEntityDescription.insertNewObject(forEntityName: "Category", into: managedContext!) as! Category
+       
+        newItem.id = UserDefaults.standard.object(forKey: "idCategory") as! Int64
+        newItem.name = name
+        newItem.checked = checked
+        
+        do {
+            try managedContext!.save()
+            let id = UserDefaults.standard.object(forKey: "idCategory") as! Int
+            UserDefaults.standard.set(id + 1, forKey: "idCategory")
+        } catch {
+            print("Failed saving")
+        }
+    }
+    
+    public func updateCategory(category: Category) {
+        
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Category")
+        request.predicate = NSPredicate(format: "id == \(category.id)")
+        request.returnsObjectsAsFaults = false
+        do {
+            guard let result = try managedContext!.fetch(request) as? [Category] else {
+                return
+            }
+            let categoryToUpdate = result[0]
+            
+            categoryToUpdate.checked = category.checked
+            
+            do {
+                try managedContext!.save()
+            } catch {
+                print("error save update")
+            }
+            
+            
+        } catch {
+            
+            print("Failed")
+        }
+    }
+    
+    public func deleteCategory(category: Category) {
+        
+        if let events = category.events?.allObjects as? [Event] {
+            for event in events {
+                deleteEvent(event: event)
+            }
+        }
+        
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Category")
+        request.predicate = NSPredicate(format: "id == \(category.id)")
+        request.returnsObjectsAsFaults = false
+        do {
+            guard let result = try managedContext!.fetch(request) as? [Category] else {
+                return
+            }
+            for object in result {
+                managedContext!.delete(object)
+            }
+            do {
+                try managedContext!.save()
+            } catch {
+                print("error save update")
+            }
+            
+            
+        } catch {
+            
+            print("Failed")
+        }
+    }
+    
+    public func loadEvent(_ predicate : Category? = nil) -> [Event] {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return [] }
         let managedContext = appDelegate.persistentContainer.viewContext
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
-        //request.predicate = NSPredicate(format: "age = %@", "12")
+        
+        if let category = predicate {
+            request.predicate = NSPredicate(format: "category.id == \(category.id)")
+        }
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
         request.returnsObjectsAsFaults = false
         
         do {
@@ -128,6 +221,36 @@ class DataBase {
             print("Failed")
         }
         return []
+    }
+    
+    public func loadCategory() -> [Category] {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return [] }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Category")
+        //request.predicate = NSPredicate(format: "age = %@", "12")
+        request.returnsObjectsAsFaults = false
+        
+        do {
+            guard let result = try managedContext.fetch(request) as? [Category] else {
+                return []
+            }
+            //            for data in result as! [NSManagedObject] {
+            //                print(data.value(forKey: "title") as! String)
+            //            }
+            return result
+        } catch {
+            
+            print("Failed")
+        }
+        return []
+    }
+    
+    public func deselctCategory() {
+        let tab = loadCategory()
+        for category in tab {
+            category.checked = false
+            updateCategory(category: category)
+        }
     }
     
 }

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,6 +18,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         UserDefaults.standard.register(defaults: ["idEvent" : 0])
+        UserDefaults.standard.register(defaults: ["idCategory" : 1])
+        UserDefaults.standard.register(defaults: ["section" : 0])
+        UserDefaults.standard.register(defaults: ["row" : 0])
+        
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        center.requestAuthorization(options: [.alert, .sound])
+        { (granted, error) in
+            if !granted {
+                print("Something went wrong")
+            }
+        }
+        
         return true
     }
     
@@ -26,12 +40,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        UserDefaults.standard.set(0, forKey: "row")
+        UserDefaults.standard.set(0, forKey: "section")
+        DataBase.shared().deselctCategory()
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -90,4 +105,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
 }
-
+extension AppDelegate : UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .badge, .sound])
+    }
+}

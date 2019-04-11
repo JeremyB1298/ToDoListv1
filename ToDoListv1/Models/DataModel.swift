@@ -12,7 +12,8 @@ import UIKit
 class DataModel {
     
     var list: [Event]?
-    
+    var category : Category?
+    var sort: String?
     private static var sharedNetworkManager: DataModel = {
         let dataModel = DataModel()
         
@@ -20,6 +21,7 @@ class DataModel {
     }()
     
     private init() {
+        sort = "title"
         loadChecklist()
         NotificationCenter.default.addObserver(
             self,
@@ -46,7 +48,7 @@ class DataModel {
     }
     
     func loadChecklist() {
-        list = DataBase.shared().loadData()
+        list = DataBase.shared().loadEvent(category)
     }
     
     func sortList(list: [Event]) -> [Event] {

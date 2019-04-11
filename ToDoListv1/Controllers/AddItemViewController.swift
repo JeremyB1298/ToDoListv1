@@ -22,33 +22,58 @@ class AddItemTableViewController: UITableViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet var datePickerCell: UITableViewCell!
     @IBOutlet weak var lblDateCreate: UILabel!
+    @IBOutlet weak var lblDateModification: UILabel!
     @IBOutlet weak var txtFieldDesc: UITextField!
+    @IBOutlet weak var lblCategoryName: UILabel!
+    @IBOutlet weak var lblAlarmDetail: UILabel!
+    @IBOutlet weak var switchAlarme: UISwitch!
     
     var imagePicker: UIImagePickerController!
     var isDatePickerVisible = false
     var delegate: AddItemTableViewDelegate?
-    var itemToEdit: Event? 
+    var itemToEdit: Event?
+    var category : Category?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         txtField.delegate = self
         if itemToEdit != nil {
-            navigationController?.title = "Edit Item"
+            navigationItem.title = "Edit Item"
+            category = itemToEdit?.category
+            if category != nil {
+                lblCategoryName.text = category?.name
+            } else {
+                lblCategoryName.text = "All"
+            }
             txtField.text = itemToEdit?.title
-            datePicker.date = (itemToEdit?.date)!
+            datePicker.date = (itemToEdit?.dueDate)!
             if itemToEdit?.image != nil {
                 imageView.image = UIImage(data: (itemToEdit?.image)!)
             }
+            switchAlarme.isOn = itemToEdit!.shouldRemind
             txtFieldDesc.text = itemToEdit?.desc
             lblDateCreate.text = initLblDate(date: (itemToEdit?.date)!)
+            lblAlarmDetail.text = initLblDate(date: (itemToEdit?.dueDate)!)
+            lblDateModification.text = initLblDate(date: itemToEdit?.dateChange ?? Date())
         } else {
-            navigationController?.title = "Add Item"
+            navigationItem.title = "Add Item"
             lblDateCreate.text = initLblDate(date: Date())
+            lblCategoryName.text = "All"
+            lblDateModification.text = initLblDate(date: Date())
+            lblAlarmDetail.text = initLblDate(date: Date())
         }
-        datePicker.datePickerMode = UIDatePicker.Mode.date
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped)))
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "categoryChoice" , let navigation = segue.destination as? UINavigationController {
+            let viewController = navigation.topViewController as? ItemCategoryViewController
+            viewController?.delegate = self
+        }
+    }
+    
+    
     
     @objc private func imageTapped(_ recognizer: UITapGestureRecognizer) {
         imagePicker =  UIImagePickerController()
@@ -68,25 +93,24 @@ class AddItemTableViewController: UITableViewController {
     func showDatePicker() {
         isDatePickerVisible = true
         //tableView.beginUpdates()
-        tableView.insertRows(at: [IndexPath(row: 2, section: 3)], with: UITableView.RowAnimation.left)
+        tableView.insertRows(at: [IndexPath(row: 4, section: 3)], with: UITableView.RowAnimation.left)
         //tableView.endUpdates()
         //tableView.reloadData()
-        lblDateCreate.textColor = UIColor.blue
+        lblAlarmDetail.textColor = UIColor.blue
     }
     
     func hideDatePicker() {
         isDatePickerVisible = false
-        tableView.deleteRows(at: [IndexPath(row: 2, section: 3)], with: UITableView.RowAnimation.right)
+        tableView.deleteRows(at: [IndexPath(row: 4, section: 3)], with: UITableView.RowAnimation.right)
         tableView.reloadData()
-        lblDateCreate.textColor = UIColor.black
+        lblAlarmDetail.textColor = UIColor.black
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //txtField.becomeFirstResponder()
-        if (txtField.text?.isEmpty)! {
-            btnDone.isEnabled = false
-        }
+        txtField.becomeFirstResponder()
+        btnDone.isEnabled = txtField.text?.count != 0 ? true : false
     }
 
     @IBAction func actnDone(_ sender: Any) {
@@ -97,13 +121,16 @@ class AddItemTableViewController: UITableViewController {
                 return
             }
             itemToEdit?.title = txt
-            itemToEdit?.date = datePicker.date
+            itemToEdit?.dueDate = datePicker.date
             itemToEdit?.image = imageView.image?.pngData()
+            itemToEdit?.shouldRemind = switchAlarme.isOn
+            itemToEdit?.dateChange = Date()
+            
             if let desc = txtFieldDesc.text {
                 itemToEdit?.desc = desc
             }
-            if let desc = txtFieldDesc.text {
-                itemToEdit?.desc = desc
+            if let cat = category {
+                itemToEdit?.category = cat
             }
             DataBase.shared().updateEvent(event: itemToEdit!)
             delegate?.editItemFinish(controller: self)
@@ -112,30 +139,25 @@ class AddItemTableViewController: UITableViewController {
                 return
             }
             if let image = imageView.image?.pngData() {
-                DataBase.shared().insertEvent(title: txt, date: datePicker.date, image: image, desc: txtFieldDesc.text ?? "")
-                delegate?.addItemFinish(controller: self)
+                DataBase.shared().insertEvent(title: txt, date: datePicker.date, image: image, desc: txtFieldDesc.text ?? "", category: category,switchAlarme.isOn)
             } else {
-                DataBase.shared().insertEvent(title: txt, date: datePicker.date, desc: txtFieldDesc.text ?? "")
-                delegate?.addItemFinish(controller: self)
+                DataBase.shared().insertEvent(title: txt, date: datePicker.date, desc: txtFieldDesc.text ?? "", category: category,switchAlarme.isOn)
+
             }
             
+            delegate?.addItemFinish(controller: self)
         }
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        imagePicker.dismiss(animated: true, completion: nil)
-        imageView.image = info[.originalImage] as? UIImage
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 3, isDatePickerVisible {
-            return 3
+            return 5
         }
         return super.tableView(tableView, numberOfRowsInSection: section)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath == IndexPath(row: 2, section: 3) {
+        if indexPath == IndexPath(row: 4, section: 3) {
             return datePickerCell
         } else {
             return super.tableView(tableView, cellForRowAt: indexPath)
@@ -143,7 +165,7 @@ class AddItemTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
-        if indexPath == IndexPath(row: 2, section: 3) {
+        if indexPath == IndexPath(row: 4, section: 3) {
             return 0
         } else {
             return super.tableView(tableView, indentationLevelForRowAt: indexPath)
@@ -158,7 +180,7 @@ class AddItemTableViewController: UITableViewController {
 //    }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if isDatePickerVisible,indexPath.row == 2, indexPath.section == 3 {
+        if isDatePickerVisible,indexPath.row == 4, indexPath.section == 3 {
             return datePicker.intrinsicContentSize.height + 1
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
@@ -167,38 +189,42 @@ class AddItemTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 3, indexPath.row == 0 {
+        if indexPath.section == 3, indexPath.row == 3 {
             
-            if isDatePickerVisible {
-                hideDatePicker()
-            } else {
-                showDatePicker()
-            }
+            isDatePickerVisible ? hideDatePicker() : showDatePicker()
             
         }
     }
     @IBAction func dateChanged(_ sender: Any) {
-        lblDateCreate.text = initLblDate(date: datePicker.date)
+        lblAlarmDetail.text = initLblDate(date: datePicker.date)
     }
     
 }
 extension AddItemTableViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if textField == txtField {
-            let nsString = txtField.text as NSString?
-            let newString = nsString?.replacingCharacters(in: range, with: string)
-            if newString?.isEmpty ?? true {
-                btnDone.isEnabled = false
-            } else {
-                btnDone.isEnabled = true
-            }
-            return true
-        } else {
-            return true
+        let nsString = txtField.text as NSString?
+        guard var newString = nsString?.replacingCharacters(in: range, with: string) else {
+            return false
         }
-        
+        newString = newString.trimmingCharacters(in: .whitespaces)
+        newString = String(newString.filter { !" \n\t\r".contains($0) })
+        btnDone.isEnabled = !newString.isEmpty
+        return true
     }
 }
 extension AddItemTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        imagePicker.dismiss(animated: true, completion: nil)
+        imageView.image = info[.originalImage] as? UIImage
+    }
+}
 
+extension AddItemTableViewController : ItemCategoryDelegate{
+    func choosenCategory(view: ItemCategoryViewController, category: Category) {
+        view.dismiss(animated: true, completion: nil)
+        self.category = category
+        lblCategoryName.text = category.name
+    }
+    
+    
 }
