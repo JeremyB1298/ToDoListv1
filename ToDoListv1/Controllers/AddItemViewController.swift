@@ -124,6 +124,7 @@ class AddItemTableViewController: UITableViewController {
             itemToEdit?.dueDate = datePicker.date
             itemToEdit?.image = imageView.image?.pngData()
             itemToEdit?.shouldRemind = switchAlarme.isOn
+            itemToEdit?.dateChange = Date()
             
             if let desc = txtFieldDesc.text {
                 itemToEdit?.desc = desc
