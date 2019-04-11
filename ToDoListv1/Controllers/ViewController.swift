@@ -119,7 +119,6 @@ class ViewController: UIViewController {
     }
     
 }
-
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     //MARK : - Table view DataSource
@@ -165,18 +164,40 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             
             action in
             if (self.resultSearchController.isActive) {
-                DataBase.shared().deleteEvent(event: self.filteredTListItem[indexPath.row])
-                DataModel.shared().list!.remove(at: (DataModel.shared().list?.firstIndex(of: self.filteredTListItem[indexPath.row]))! )
-                self.filteredTListItem.remove(at: indexPath.row)
+                DataBase.shared().deleteEvent(event: self.contactsWithSections[indexPath.section][indexPath.row])
+                DataModel.shared().list!.remove(at: (DataModel.shared().list?.firstIndex(of: self.contactsWithSections[indexPath.section][indexPath.row]))! )
+                self.contactsWithSections[indexPath.section].remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+                if self.contactsWithSections[indexPath.section].count == 0 {
+                    self.contactsWithSections.remove(at: indexPath.section)
+                    self.contactsWithSections = [[Event]]()
+                    self.initSection()
+                    let indexSet = IndexSet(arrayLiteral: indexPath.section)
+                    tableView.deleteSections(indexSet, with: UITableView.RowAnimation.automatic)
+                }
             } else {
-                DataBase.shared().deleteEvent(event: DataModel.shared().list![indexPath.row])
-                DataModel.shared().list!.remove(at: indexPath.row)
+                DataBase.shared().deleteEvent(event: self.contactsWithSections[indexPath.section][indexPath.row])
+                DataModel.shared().list!.remove(at: (DataModel.shared().list?.firstIndex(of: self.contactsWithSections[indexPath.section][indexPath.row]))! )
+                self.contactsWithSections[indexPath.section].remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+                if self.contactsWithSections[indexPath.section].count == 0 {
+                    self.contactsWithSections.remove(at: indexPath.section)
+                    self.contactsWithSections = [[Event]]()
+                    self.initSection()
+                    let indexSet = IndexSet(arrayLiteral: indexPath.section)
+                    tableView.deleteSections(indexSet, with: UITableView.RowAnimation.automatic)
+                }
+                
             }
         }))
         
         alert.addAction(UIAlertAction(title: "non", style: UIAlertAction.Style.cancel, handler: nil))
+
+        if self.presentedViewController != nil {
+            self.dismiss(animated: false, completion: nil)
+            resultSearchController.searchBar.text = nil
+        }
+            
         self.present(alert, animated: true, completion: nil)
         
     }
@@ -190,8 +211,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         guard let currentCell = tableView.cellForRow(at: indexPath) as? ItemTableViewCell else {
             return
         }
-        currentCell.lblCheckmark.isHidden = DataModel.shared().list![indexPath.row].checked ? true : false
-        DataModel.shared().list![indexPath.row].checked = DataModel.shared().list![indexPath.row].checked ? false : true
+        currentCell.lblCheckmark.isHidden = contactsWithSections[indexPath.section][indexPath.row].checked ? true : false
+        contactsWithSections[indexPath.section][indexPath.row].checked = !contactsWithSections[indexPath.section][indexPath.row].checked
         
     }
     
