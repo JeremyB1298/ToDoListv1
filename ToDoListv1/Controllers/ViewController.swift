@@ -28,12 +28,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initSearch()
-        initSection()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         DataModel.shared().loadChecklist()
+        initSection()
         tableView.reloadData()
     }
     
