@@ -121,7 +121,7 @@ class ViewController: UIViewController {
 }
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
-    //MARK : - Table view DataSource
+    //MARK : - Table View DataSource
         func numberOfSections(in tableView: UITableView) -> Int {
             return sectionTitles.count
         }
@@ -213,7 +213,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
         currentCell.lblCheckmark.isHidden = contactsWithSections[indexPath.section][indexPath.row].checked ? true : false
         contactsWithSections[indexPath.section][indexPath.row].checked = !contactsWithSections[indexPath.section][indexPath.row].checked
-        
+        DataBase.shared().updateEvent(event: contactsWithSections[indexPath.section][indexPath.row])
     }
     
 }

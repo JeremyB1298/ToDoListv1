@@ -66,6 +66,8 @@ class AddItemTableViewController: UITableViewController {
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped)))
     }
     
+    //MARK: - Prepare
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "categoryChoice" , let navigation = segue.destination as? UINavigationController {
             let viewController = navigation.topViewController as? ItemCategoryViewController
@@ -73,7 +75,7 @@ class AddItemTableViewController: UITableViewController {
         }
     }
     
-    
+    //MARK: - Image Tapped
     
     @objc private func imageTapped(_ recognizer: UITapGestureRecognizer) {
         imagePicker =  UIImagePickerController()
@@ -82,6 +84,8 @@ class AddItemTableViewController: UITableViewController {
         
         present(imagePicker, animated: true, completion: nil)
     }
+    
+    //MARK: - Personnal Functions
     
     func initLblDate(date: Date) -> String {
         let dateFormatter = DateFormatter()
@@ -113,6 +117,12 @@ class AddItemTableViewController: UITableViewController {
         btnDone.isEnabled = txtField.text?.count != 0 ? true : false
     }
 
+    //MARK: - Actions Buttons
+    
+    @IBAction func dateChanged(_ sender: Any) {
+        lblAlarmDetail.text = initLblDate(date: datePicker.date)
+    }
+    
     @IBAction func actnDone(_ sender: Any) {
         
         if itemToEdit != nil {
@@ -149,6 +159,8 @@ class AddItemTableViewController: UITableViewController {
         }
     }
     
+    //MARK : - Table View DataSource
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 3, isDatePickerVisible {
             return 5
@@ -172,13 +184,6 @@ class AddItemTableViewController: UITableViewController {
         }
     }
     
-//    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-//        if indexPath.row == 0, indexPath.section == 3 {
-//            return indexPath
-//        }
-//        return super.tableView(tableView, willSelectRowAt: indexPath)
-//    }
-    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if isDatePickerVisible,indexPath.row == 4, indexPath.section == 3 {
             return datePicker.intrinsicContentSize.height + 1
@@ -188,6 +193,8 @@ class AddItemTableViewController: UITableViewController {
         
     }
     
+    //MARK: - Table View Delegate
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 3, indexPath.row == 3 {
             
@@ -195,11 +202,12 @@ class AddItemTableViewController: UITableViewController {
             
         }
     }
-    @IBAction func dateChanged(_ sender: Any) {
-        lblAlarmDetail.text = initLblDate(date: datePicker.date)
-    }
+
     
 }
+
+//MARK : - UITextFieldDelegate
+
 extension AddItemTableViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let nsString = txtField.text as NSString?
@@ -212,12 +220,17 @@ extension AddItemTableViewController: UITextFieldDelegate {
         return true
     }
 }
+
+// MARK : - UIImagePickerControllerDelegate & UINavigationControllerDelegate
+
 extension AddItemTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         imagePicker.dismiss(animated: true, completion: nil)
         imageView.image = info[.originalImage] as? UIImage
     }
 }
+
+//MARK : - ItemCategoryDelegate
 
 extension AddItemTableViewController : ItemCategoryDelegate{
     func choosenCategory(view: ItemCategoryViewController, category: Category) {

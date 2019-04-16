@@ -13,8 +13,6 @@ protocol AllCategoriesDelegate {
 }
 
 class AllCategoriesTableViewController: UITableViewController {
-
-    var categories = ["1","2","3","4"]
     
     var indexpathSelected : IndexPath?
     
@@ -27,15 +25,15 @@ class AllCategoriesTableViewController: UITableViewController {
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoriesCellIdentifier")
     }
-    
-    
-    
+ 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         indexpathSelected = IndexPath(row: UserDefaults.standard.object(forKey: "row") as! Int, section: UserDefaults.standard.object(forKey: "section") as! Int)
     }
 
+    //MARK : - Table View DataSource
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         if indexPath.row == 0, indexPath.section == 0 {
@@ -89,6 +87,15 @@ class AllCategoriesTableViewController: UITableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        DataBase.shared().deleteCategory(category: tabCategories[indexPath.row])
+        tabCategories.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.bottom)
+    }
+    
+    //MARK : - Table View Delegate
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         tableView.deselectRow(at: indexPath, animated: true)
@@ -129,12 +136,7 @@ class AllCategoriesTableViewController: UITableViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-            DataBase.shared().deleteCategory(category: tabCategories[indexPath.row])
-            tabCategories.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.bottom)
-    }
+    //MARK : - Buttons Actions
     
     @IBAction func addCategorie(_ sender: Any) {
         
@@ -155,6 +157,7 @@ class AllCategoriesTableViewController: UITableViewController {
         self.present(alert, animated: true, completion: nil)
         
     }
+    
     @IBAction func cancel(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }

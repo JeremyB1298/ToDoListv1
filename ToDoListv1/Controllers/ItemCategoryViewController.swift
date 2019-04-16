@@ -23,7 +23,8 @@ class ItemCategoryViewController: UITableViewController {
 
         
     }
-
+    
+    //MARK : - Table View DataSource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
@@ -36,11 +37,15 @@ class ItemCategoryViewController: UITableViewController {
         return cell
     }
     
+    //MARK : - Table View Delegate
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         delegate?.choosenCategory(view: self, category: categories[indexPath.row])
     }
 
+    //MARK : - Buttons Actions
+    
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         self.dismiss(animated: true, completion: nil)
     }
