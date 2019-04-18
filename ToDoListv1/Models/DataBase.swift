@@ -97,6 +97,7 @@ class DataBase {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Event")
         request.predicate = NSPredicate(format: "id == \(event.id)")
         request.returnsObjectsAsFaults = false
+        event.deleteNotification()
         do {
             guard let result = try managedContext!.fetch(request) as? [Event] else {
                 return
