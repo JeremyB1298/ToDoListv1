@@ -55,7 +55,7 @@ class AllCategoriesTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         
-        if indexPath.row == 0 , indexPath.section == 0 || indexPath.row == UserDefaults.standard.integer(forKey: "row") {
+        if indexPath.row == 0 , indexPath.section == 0 || indexPath.row == UserDefaults.standard.integer(forKey: "row"), UserDefaults.standard.integer(forKey: "section") != 0 {
             return .none
         }
         else {
