@@ -54,7 +54,8 @@ class AllCategoriesTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        if indexPath.row == 0 , indexPath.section == 0 {
+        
+        if indexPath.row == 0 , indexPath.section == 0 || indexPath.row == UserDefaults.standard.integer(forKey: "row") {
             return .none
         }
         else {
@@ -88,10 +89,12 @@ class AllCategoriesTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+
+            DataBase.shared().deleteCategory(category: tabCategories[indexPath.row])
+            tabCategories.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.bottom)
+
         
-        DataBase.shared().deleteCategory(category: tabCategories[indexPath.row])
-        tabCategories.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.bottom)
     }
     
     //MARK : - Table View Delegate
